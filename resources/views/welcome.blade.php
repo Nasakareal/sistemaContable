@@ -148,21 +148,21 @@
                 <!-- Sistema de Inventarios -->
                 <div class="system-card">
                     <img src="{{ asset('img/logo_inventarios.png') }}" alt="Sistema Inventarios" class="system-logo">
-                    <a href="{{ request()->getHost() === 'localhost' ? '/sistemaInventarios/public/login' : '/sistemaInventarios/public/login' }}">
+                    <a href="{{ request()->getHost() === 'localhost' ? '/sistemaInventarios/login' : '/sistemaInventarios/public/login' }}">
                         <i class="fa-solid fa-boxes-stacked"></i> Sistema de Inventarios
                     </a>
                 </div>
                 <!-- Sistema Contable -->
                 <div class="system-card">
                     <img src="{{ asset('img/logo_contable.png') }}" alt="Sistema Contable" class="system-logo">
-                    <a href="{{ request()->getHost() === 'localhost' ? '/sistemaContable/public/login' : '/sistemaContable/public/login' }}">
+                    <a href="{{ request()->getHost() === 'localhost' ? '/sistemaContable/login' : '/sistemaContable/public/login' }}">
                         <i class="fa-solid fa-calendar-alt"></i> Sistema Contable
                     </a>
                 </div>
                 <!-- Sistema Recursos Humanos -->
                 <div class="system-card">
                     <img src="{{ asset('img/logo_humanos.png') }}" alt="Recursos Humanos" class="system-logo">
-                    <a href="{{ request()->getHost() === 'localhost' ? '/sistemaHumanos/public/login' : '/sistemaHumanos/public/login' }}">
+                    <a href="{{ request()->getHost() === 'localhost' ? '/sistemaHumanos/login' : '/sistemaHumanos/public/login' }}">
                         <i class="fa-solid fa-calendar-alt"></i> Recursos Humanos
                     </a>
                 </div>

@@ -21,11 +21,12 @@ class FondoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre'      => 'required|string|max:255',
+            'clave'       => 'required|string|unique:fondos,clave',
+            'nombre'      => 'nullable|string|max:255',
             'descripcion' => 'nullable|string',
         ]);
 
-        Fondo::create($request->only('nombre', 'descripcion'));
+        Fondo::create($request->only('clave', 'nombre', 'descripcion'));
 
         return redirect()->route('fondos.index')->with('success', 'Fondo creado correctamente.');
     }
@@ -43,11 +44,12 @@ class FondoController extends Controller
     public function update(Request $request, Fondo $fondo)
     {
         $request->validate([
-            'nombre'      => 'required|string|max:255',
+            'clave'       => 'required|string|unique:fondos,clave,' . $fondo->id,
+            'nombre'      => 'nullable|string|max:255',
             'descripcion' => 'nullable|string',
         ]);
 
-        $fondo->update($request->only('nombre', 'descripcion'));
+        $fondo->update($request->only('clave', 'nombre', 'descripcion'));
 
         return redirect()->route('fondos.index')->with('success', 'Fondo actualizado correctamente.');
     }

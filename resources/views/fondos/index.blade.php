@@ -19,14 +19,12 @@
                     </div>
                 </div>
 
-                
-
                 <div class="card-body">
-
                     <table id="fondos" class="table table-striped table-bordered table-hover table-sm">
                         <thead>
                             <tr>
-                                <th><center>Número</center></th>
+                                <th><center>#</center></th>
+                                <th><center>Clave</center></th> <!-- NUEVA COLUMNA -->
                                 <th><center>Nombre del Fondo</center></th>
                                 <th><center>Descripción</center></th>
                                 <th><center>Acciones</center></th>
@@ -36,7 +34,8 @@
                             @foreach ($fondos as $index => $fondo)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $fondo->nombre }}</td>
+                                    <td>{{ $fondo->clave }}</td> <!-- NUEVA COLUMNA -->
+                                    <td>{{ $fondo->nombre ?? 'Sin nombre' }}</td>
                                     <td>{{ $fondo->descripcion ?? 'Sin descripción' }}</td>
                                     <td style="text-align: center">
                                         <a href="{{ route('fondos.show', $fondo->id) }}" class="btn btn-info btn-sm">
@@ -58,6 +57,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
     </div>
@@ -120,8 +120,8 @@
                             { extend: 'print', text: 'Imprimir' }
                         ]
                     },
-                    { 
-                        extend: 'colvis', 
+                    {
+                        extend: 'colvis',
                         text: 'Visor de columnas'
                     }
                 ]

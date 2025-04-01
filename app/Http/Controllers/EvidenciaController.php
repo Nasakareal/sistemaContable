@@ -3,83 +3,74 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evidencia;
+use App\Models\SolicitudDev;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EvidenciaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $evidencias = Evidencia::with('solicitudDev')->get();
+        return view('evidencias.index', compact('evidencias'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        $solicitudes = SolicitudDev::all();
+        return view('evidencias.create', compact('solicitudes'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'solicitud_dev_id' => 'nullable|exists:solicitud_devs,id',
+            'ruta' => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+        ]);
+
+        $path = $request->file('ruta')->store('evidencias', 'public');
+
+        Evidencia::create([
+            'solicitud_dev_id' => $request->solicitud_dev_id,
+            'ruta' => $path,
+        ]);
+
+        return redirect()->route('evidencias.index')->with('success', 'Evidencia cargada correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Evidencia  $evidencia
-     * @return \Illuminate\Http\Response
-     */
     public function show(Evidencia $evidencia)
     {
-        //
+        return view('evidencias.show', compact('evidencia'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Evidencia  $evidencia
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Evidencia $evidencia)
     {
-        //
+        $solicitudes = SolicitudDev::all();
+        return view('evidencias.edit', compact('evidencia', 'solicitudes'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Evidencia  $evidencia
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Evidencia $evidencia)
     {
-        //
+        $request->validate([
+            'solicitud_dev_id' => 'nullable|exists:solicitud_devs,id',
+            'ruta' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
+        ]);
+
+        if ($request->hasFile('ruta')) {
+            Storage::disk('public')->delete($evidencia->ruta);
+            $evidencia->ruta = $request->file('ruta')->store('evidencias', 'public');
+        }
+
+        $evidencia->solicitud_dev_id = $request->solicitud_dev_id;
+        $evidencia->save();
+
+        return redirect()->route('evidencias.index')->with('success', 'Evidencia actualizada.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Evidencia  $evidencia
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Evidencia $evidencia)
     {
-        //
+        Storage::disk('public')->delete($evidencia->ruta);
+        $evidencia->delete();
+        return redirect()->route('evidencias.index')->with('success', 'Evidencia eliminada.');
     }
 }

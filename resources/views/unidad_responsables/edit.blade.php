@@ -19,13 +19,28 @@
                         @method('PUT')
 
                         <div class="row">
+                            <!-- Clave -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="clave">Clave de la Unidad</label>
+                                    <input type="text" name="clave" id="clave"
+                                           class="form-control @error('clave') is-invalid @enderror"
+                                           value="{{ old('clave', $unidad_responsable->clave) }}" required>
+                                    @error('clave')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <!-- Nombre -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="nombre">Nombre de la Unidad</label>
                                     <input type="text" name="nombre" id="nombre"
                                            class="form-control @error('nombre') is-invalid @enderror"
-                                           value="{{ old('nombre', $unidad_responsable->nombre) }}" required>
+                                           value="{{ old('nombre', $unidad_responsable->nombre) }}">
                                     @error('nombre')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -34,8 +49,31 @@
                                 </div>
                             </div>
 
-                            <!-- Descripción -->
-                            <div class="col-md-6">
+                            <!-- Fondo (select) -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="fondo_id">Fondo Asignado</label>
+                                    <select name="fondo_id" id="fondo_id"
+                                            class="form-control @error('fondo_id') is-invalid @enderror" required>
+                                        <option value="">Seleccione un fondo</option>
+                                        @foreach ($fondos as $fondo)
+                                            <option value="{{ $fondo->id }}" {{ old('fondo_id', $unidad_responsable->fondo_id) == $fondo->id ? 'selected' : '' }}>
+                                                {{ $fondo->clave }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('fondo_id')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="descripcion">Descripción</label>
                                     <input type="text" name="descripcion" id="descripcion"
@@ -63,6 +101,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>

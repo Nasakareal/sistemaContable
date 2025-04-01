@@ -15,12 +15,20 @@
                 </div>
                 <div class="card-body">
                     <dl class="row">
+                        <dt class="col-sm-4">Clave:</dt>
+                        <dd class="col-sm-8">{{ $unidad_responsable->clave }}</dd>
+
                         <dt class="col-sm-4">Nombre:</dt>
-                        <dd class="col-sm-8">{{ $unidad_responsable->nombre }}</dd>
+                        <dd class="col-sm-8">{{ $unidad_responsable->nombre ?? 'Sin nombre' }}</dd>
 
                         <dt class="col-sm-4">Descripción:</dt>
                         <dd class="col-sm-8">
                             {{ $unidad_responsable->descripcion ?? 'Sin descripción' }}
+                        </dd>
+
+                        <dt class="col-sm-4">Fondo asignado:</dt>
+                        <dd class="col-sm-8">
+                            {{ $unidad_responsable->fondo->clave ?? 'Sin fondo' }}
                         </dd>
 
                         <dt class="col-sm-4">Creado el:</dt>

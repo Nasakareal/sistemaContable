@@ -9,50 +9,27 @@ class PartidaSeeder extends Seeder
 {
     public function run()
     {
-        Partida::create([
-            'nombre'      => '10000',
-            'descripcion' => 'SERVICIOS PERSONALES',
-            'capitulo_id' => 1,
-        ]);
-        Partida::create([
-            'nombre'      => '20000',
-            'descripcion' => 'MATERIALES Y SUMINISTRO',
-            'capitulo_id' => 1,
-        ]);
-        Partida::create([
-            'nombre'      => '30000',
-            'descripcion' => 'SERVICIOS GENERALES',
-            'capitulo_id' => 1,
-        ]);
-        Partida::create([
-            'nombre'      => '40000',
-            'descripcion' => 'TRANSFERENCIAS, ASIGNACIONES, SUBSIDIOS Y OTRAS AYUDAS',
-            'capitulo_id' => 1,
-        ]);
-        Partida::create([
-            'nombre'      => '50000',
-            'descripcion' => 'BIENES MUEBLES, INMUEBLES E INTANGIBLES',
-            'capitulo_id' => 1,
-        ]);
-        Partida::create([
-            'nombre'      => '60000',
-            'descripcion' => 'INVERSIÓN PÚBLICA',
-            'capitulo_id' => 1,
-        ]);
-        Partida::create([
-            'nombre'      => '70000',
-            'descripcion' => 'INVERSIONES FINANCIERAS Y OTRAS PROVISIONES',
-            'capitulo_id' => 1,
-        ]);
-        Partida::create([
-            'nombre'      => '80000',
-            'descripcion' => 'PARTICIPACIONES Y APORTACIONES',
-            'capitulo_id' => 1,
-        ]);
-        Partida::create([
-            'nombre'      => '90000',
-            'descripcion' => 'DEUDA PÚBLICA',
-            'capitulo_id' => 1,
-        ]);
+        $partidas = [
+            ['nombre' => '11301', 'descripcion' => 'Sueldo'],
+            ['nombre' => '13101', 'descripcion' => 'Quinquenio'],
+            ['nombre' => '13104', 'descripcion' => 'P. Antigüedad'],
+            ['nombre' => '13201', 'descripcion' => 'P. Vacacional'],
+            ['nombre' => '13202', 'descripcion' => 'Aguinaldo'],
+            ['nombre' => '13301', 'descripcion' => 'Horas Extras'],
+            ['nombre' => '13414', 'descripcion' => 'Despensa'],
+            ['nombre' => '13416', 'descripcion' => 'M. Didáctico'],
+            ['nombre' => '15401', 'descripcion' => 'Bono Administrativo'],
+            ['nombre' => '15401', 'descripcion' => 'Excelencia al Servicio'],
+            ['nombre' => '15401', 'descripcion' => 'Pres No/Ligadas (B/Día Maestro)'],
+            ['nombre' => '15401', 'descripcion' => 'Pres No/Ligadas (Día Madre)'],
+        ];
+
+        foreach ($partidas as $partida) {
+            Partida::create([
+                'nombre' => $partida['nombre'],
+                'descripcion' => $partida['descripcion'],
+                'capitulo_id' => 1,
+            ]);
+        }
     }
 }

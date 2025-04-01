@@ -12,7 +12,16 @@ class UnidadResponsable extends Model
     protected $table = 'unidad_responsables';
 
     protected $fillable = [
+        'clave',
         'nombre',
         'descripcion',
+        'fondo_id'
     ];
+
+
+    public function fondo()
+    {
+        return $this->belongsTo(Fondo::class);
+    }
+
 }

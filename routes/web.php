@@ -18,6 +18,39 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Endpoint JSON para el dashboard (datos reales)
 Route::get('/dashboard.json', [App\Http\Controllers\HomeController::class, 'json'])->name('dashboard.json');
 
+// Rutas para Transacciones
+Route::prefix('transacciones')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\TransaccionController::class, 'index'])->middleware('can:ver transacciones')->name('transacciones.index');
+    Route::get('/create', [App\Http\Controllers\TransaccionController::class, 'create'])->middleware('can:crear transacciones')->name('transacciones.create');
+    Route::post('/', [App\Http\Controllers\TransaccionController::class, 'store'])->middleware('can:crear transacciones')->name('transacciones.store');
+    Route::get('/{transaccion}', [App\Http\Controllers\TransaccionController::class, 'show'])->middleware('can:ver transacciones')->name('transacciones.show');
+    Route::get('/{transaccion}/edit', [App\Http\Controllers\TransaccionController::class, 'edit'])->middleware('can:editar transacciones')->name('transacciones.edit');
+    Route::put('/{transaccion}', [App\Http\Controllers\TransaccionController::class, 'update'])->middleware('can:editar transacciones')->name('transacciones.update');
+    Route::delete('/{transaccion}', [App\Http\Controllers\TransaccionController::class, 'destroy'])->middleware('can:eliminar transacciones')->name('transacciones.destroy');
+});
+
+// Rutas para Evidencias
+Route::prefix('evidencias')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\EvidenciaController::class, 'index'])->middleware('can:ver evidencias')->name('evidencias.index');
+    Route::get('/create', [App\Http\Controllers\EvidenciaController::class, 'create'])->middleware('can:crear evidencias')->name('evidencias.create');
+    Route::post('/', [App\Http\Controllers\EvidenciaController::class, 'store'])->middleware('can:crear evidencias')->name('evidencias.store');
+    Route::get('/{evidencia}', [App\Http\Controllers\EvidenciaController::class, 'show'])->middleware('can:ver evidencias')->name('evidencias.show');
+    Route::get('/{evidencia}/edit', [App\Http\Controllers\EvidenciaController::class, 'edit'])->middleware('can:editar evidencias')->name('evidencias.edit');
+    Route::put('/{evidencia}', [App\Http\Controllers\EvidenciaController::class, 'update'])->middleware('can:editar evidencias')->name('evidencias.update');
+    Route::delete('/{evidencia}', [App\Http\Controllers\EvidenciaController::class, 'destroy'])->middleware('can:eliminar evidencias')->name('evidencias.destroy');
+});
+
+// Rutas para Solicitudes Dev
+Route::prefix('solicitudesDev')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\SolicitudDevController::class, 'index'])->middleware('can:ver solicitudesDev')->name('solicitudesDev.index');
+    Route::get('/create', [App\Http\Controllers\SolicitudDevController::class, 'create'])->middleware('can:crear solicitudesDev')->name('solicitudesDev.create');
+    Route::post('/', [App\Http\Controllers\SolicitudDevController::class, 'store'])->middleware('can:crear solicitudesDev')->name('solicitudesDev.store');
+    Route::get('/{solicitudDev}', [App\Http\Controllers\SolicitudDevController::class, 'show'])->middleware('can:ver solicitudesDev')->name('solicitudesDev.show');
+    Route::get('/{solicitudDev}/edit', [App\Http\Controllers\SolicitudDevController::class, 'edit'])->middleware('can:editar solicitudesDev')->name('solicitudesDev.edit');
+    Route::put('/{solicitudDev}', [App\Http\Controllers\SolicitudDevController::class, 'update'])->middleware('can:editar solicitudesDev')->name('solicitudesDev.update');
+    Route::delete('/{solicitudDev}', [App\Http\Controllers\SolicitudDevController::class, 'destroy'])->middleware('can:eliminar solicitudesDev')->name('solicitudesDev.destroy');
+});
+
 // Rutas para Areas
 Route::prefix('areas')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\AreaController::class, 'index'])->middleware('can:ver areas')->name('areas.index');

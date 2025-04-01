@@ -20,4 +20,34 @@ class Transaccion extends Model
         'area_id',
         'solicitud_dev_id'
     ];
+
+    public function cuentaBancaria()
+    {
+        return $this->belongsTo(CuentaBancaria::class);
+    }
+
+    public function capitulo()
+    {
+        return $this->belongsTo(Capitulo::class);
+    }
+
+    public function partida()
+    {
+        return $this->belongsTo(Partida::class);
+    }
+
+    public function unidadResponsable()
+    {
+        return $this->belongsTo(UnidadResponsable::class);
+    }
+
+    public function area()
+    {
+        return $this->belongsTo(Area::class);
+    }
+
+    public function solicitudDev()
+    {
+        return $this->belongsTo(SolicitudDev::class);
+    }
 }

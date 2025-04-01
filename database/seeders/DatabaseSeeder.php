@@ -15,7 +15,6 @@ class DatabaseSeeder extends Seeder
             CuentaBancariaSeeder::class,
             CapituloSeeder::class,
             PartidaSeeder::class,
-            UnidadResponsableSeeder::class,
             AreaSeeder::class,
             SolicitudDevSeeder::class,
             EvidenciaSeeder::class,

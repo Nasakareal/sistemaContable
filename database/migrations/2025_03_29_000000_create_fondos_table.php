@@ -10,7 +10,8 @@ class CreateFondosTable extends Migration
     {
         Schema::create('fondos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
+            $table->string('clave')->unique();
+            $table->string('nombre')->nullable();
             $table->text('descripcion')->nullable();
             $table->timestamps();
         });

@@ -7,79 +7,56 @@ use Illuminate\Http\Request;
 
 class SolicitudDevController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $solicitudes = SolicitudDev::all();
+        return view('solicitudesDev.index', compact('solicitudes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('solicitudesDev.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'codigo' => 'nullable|string|max:255',
+            'descripcion' => 'nullable|string',
+            'documento_origen' => 'nullable|string|max:255',
+        ]);
+
+        SolicitudDev::create($request->all());
+
+        return redirect()->route('solicitudesDev.index')->with('success', 'Solicitud creada exitosamente.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\SolicitudDev  $solicitudDev
-     * @return \Illuminate\Http\Response
-     */
     public function show(SolicitudDev $solicitudDev)
     {
-        //
+        return view('solicitudesDev.show', compact('solicitudDev'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\SolicitudDev  $solicitudDev
-     * @return \Illuminate\Http\Response
-     */
     public function edit(SolicitudDev $solicitudDev)
     {
-        //
+        return view('solicitudesDev.edit', compact('solicitudDev'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SolicitudDev  $solicitudDev
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, SolicitudDev $solicitudDev)
     {
-        //
+        $request->validate([
+            'codigo' => 'nullable|string|max:255',
+            'descripcion' => 'nullable|string',
+            'documento_origen' => 'nullable|string|max:255',
+        ]);
+
+        $solicitudDev->update($request->all());
+
+        return redirect()->route('solicitudesDev.index')->with('success', 'Solicitud actualizada exitosamente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\SolicitudDev  $solicitudDev
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(SolicitudDev $solicitudDev)
     {
-        //
+        $solicitudDev->delete();
+        return redirect()->route('solicitudesDev.index')->with('success', 'Solicitud eliminada exitosamente.');
     }
 }

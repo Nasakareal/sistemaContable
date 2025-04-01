@@ -16,14 +16,30 @@
                 <div class="card-body">
                     <form action="{{ route('fondos.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+
                         <div class="row">
+                            <!-- Clave -->
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="clave">Clave del Fondo</label>
+                                    <input type="text" name="clave" id="clave" 
+                                           class="form-control @error('clave') is-invalid @enderror" 
+                                           value="{{ old('clave') }}" placeholder="Ej: 251101021" required>
+                                    @error('clave')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <!-- Nombre -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="nombre">Nombre</label>
                                     <input type="text" name="nombre" id="nombre" 
                                            class="form-control @error('nombre') is-invalid @enderror" 
-                                           value="{{ old('nombre') }}" placeholder="Ingrese el nombre" required>
+                                           value="{{ old('nombre') }}" placeholder="Nombre del fondo (opcional)">
                                     @error('nombre')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -33,12 +49,12 @@
                             </div>
 
                             <!-- Descripción -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="nombre">Descripción</label>
+                                    <label for="descripcion">Descripción</label>
                                     <input type="text" name="descripcion" id="descripcion" 
                                            class="form-control @error('descripcion') is-invalid @enderror" 
-                                           value="{{ old('descripcion') }}" placeholder="Ingrese la descripción" required>
+                                           value="{{ old('descripcion') }}" placeholder="Descripción opcional">
                                     @error('descripcion')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -61,6 +77,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>

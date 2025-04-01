@@ -60,6 +60,24 @@ class RolesAndPermissionsSeeder extends Seeder
             'editar areas',
             'eliminar areas',
 
+             // Solicitudes Dev
+            'ver solicitudesDev',
+            'crear solicitudesDev',
+            'editar solicitudesDev',
+            'eliminar solicitudesDev',
+
+            // Evidencias
+            'ver evidencias',
+            'crear evidencias',
+            'editar evidencias',
+            'eliminar evidencias',
+
+            // Transacciones
+            'ver transacciones',
+            'crear transacciones',
+            'editar transacciones',
+            'eliminar transacciones',
+
         ];
 
         // Crear permisos si no existen

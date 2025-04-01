@@ -10,7 +10,9 @@ class CreateUnidadResponsablesTable extends Migration
     {
         Schema::create('unidad_responsables', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
+            $table->foreignId('fondo_id')->constrained('fondos')->onDelete('cascade');
+            $table->string('clave')->unique();
+            $table->string('nombre')->nullable();
             $table->text('descripcion')->nullable();
             $table->timestamps();
         });

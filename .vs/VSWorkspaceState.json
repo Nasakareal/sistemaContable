@@ -4,14 +4,10 @@
     "\\app",
     "\\app\\Http",
     "\\app\\Http\\Controllers",
-    "\\database",
-    "\\database\\seeders",
     "\\resources",
     "\\resources\\views",
-    "\\resources\\views\\areas",
-    "\\resources\\views\\unidad_responsables",
     "\\routes"
   ],
-  "SelectedNode": "\\resources\\views\\areas\\show.blade.php",
+  "SelectedNode": "\\routes\\web.php",
   "PreviewInSolutionExplorer": false
 }

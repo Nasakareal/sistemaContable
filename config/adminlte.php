@@ -436,6 +436,45 @@ return [
             ],
         ],
 
+        [
+            'text' => 'Solicitudes Dev',
+            'icon' => 'fas fa-hand-holding-usd',
+            'classes' => 'bg-blue text-white',
+            'submenu' => [
+                [
+                    'text' => 'Listado de Solicitudes',
+                    'icon' => 'fa-regular fa-rectangle-list',
+                    'url' => 'solicitudesDev',
+                ],
+            ],
+        ],
+
+        [
+            'text' => 'Evidencias Dev',
+            'icon' => 'fa-solid fa-magnifying-glass-dollar',
+            'classes' => 'bg-blue text-white',
+            'submenu' => [
+                [
+                    'text' => 'Listado de Evidencias',
+                    'icon' => 'fa-regular fa-rectangle-list',
+                    'url' => 'evidencias',
+                ],
+            ],
+        ],
+
+        [
+            'text' => 'Transacciones',
+            'icon' => 'fa-solid fa-money-check-dollar',
+            'classes' => 'bg-blue text-white',
+            'submenu' => [
+                [
+                    'text' => 'Listado de Transacciones',
+                    'icon' => 'fa-regular fa-rectangle-list',
+                    'url' => 'transacciones',
+                ],
+            ],
+        ],
+
 
         [
             'text' => 'Configuraciones',

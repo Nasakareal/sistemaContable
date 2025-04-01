@@ -24,8 +24,10 @@
                         <thead>
                             <tr>
                                 <th><center>#</center></th>
+                                <th><center>Clave</center></th>
                                 <th><center>Nombre</center></th>
                                 <th><center>Descripción</center></th>
+                                <th><center>Fondo</center></th>
                                 <th><center>Acciones</center></th>
                             </tr>
                         </thead>
@@ -33,8 +35,10 @@
                             @foreach ($unidad_responsables as $index => $unidad)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $unidad->nombre }}</td>
+                                    <td>{{ $unidad->clave }}</td>
+                                    <td>{{ $unidad->nombre ?? 'Sin nombre' }}</td>
                                     <td>{{ $unidad->descripcion ?? 'Sin descripción' }}</td>
+                                    <td>{{ $unidad->fondo->clave ?? 'Sin fondo' }}</td>
                                     <td style="text-align: center">
                                         <a href="{{ route('unidad_responsables.show', $unidad->id) }}" class="btn btn-info btn-sm">
                                             <i class="fa-regular fa-eye"></i> Ver

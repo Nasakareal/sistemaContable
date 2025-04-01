@@ -10,7 +10,13 @@ class Fondo extends Model
     use HasFactory;
 
     protected $fillable = [
+        'clave',
         'nombre',
         'descripcion'
     ];
+
+    public function unidadesResponsables()
+    {
+        return $this->hasMany(UnidadResponsable::class);
+    }
 }
