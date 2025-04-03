@@ -1,9 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\resources",
-    "\\resources\\views"
+    "\\database",
+    "\\database\\seeders"
   ],
-  "SelectedNode": "\\resources\\views\\welcome.blade.php",
+  "SelectedNode": "\\database\\seeders\\CapituloSeeder.php",
   "PreviewInSolutionExplorer": false
 }
