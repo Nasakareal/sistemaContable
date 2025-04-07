@@ -62,4 +62,17 @@ class PartidaController extends Controller
         $partida->delete();
         return redirect()->route('partidas.index')->with('success', 'Partida eliminada exitosamente.');
     }
+
+    public function getPartidas($id)
+    {
+        // Forzar a entero en caso de que se reciba como string
+        $id = (int)$id;
+        $partidas = Partida::where('capitulo_id', $id)->get();
+        // Para depurar, temporalmente descomenta:
+        // dd($id, $partidas);
+        return response()->json($partidas);
+    }
+
+
+
 }

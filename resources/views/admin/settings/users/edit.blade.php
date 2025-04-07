@@ -6,110 +6,175 @@
     <h1>Editar Usuario</h1>
 @stop
 
-@section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-outline card-success">
-                <div class="card-header">
-                    <h3 class="card-title">Actualizar Datos del Usuario</h3>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('users.update', $user->id) }}" method="POST">
-                        @csrf
-                        @method('PUT') <!-- Para actualizar usamos PUT -->
+@section('css')
+    <style>
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
 
-                        <div class="row">
-                            <!-- Nombre -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="name">Nombre del Usuario</label>
-                                    <input type="text" name="name" id="name" class="form-control"
-                                           value="{{ old('name', $user->name) }}"
-                                           placeholder="Ingrese el nombre" required>
-                                </div>
-                            </div>
+        /* Fondo oscuro para toda la tabla y elementos relacionados */
+        table.dataTable,
+        .table,
+        .table-bordered,
+        .table-striped,
+        .table-hover {
+            background-color: #1f2937 !important;
+            color: white !important;
+        }
 
-                            <!-- Email -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" name="email" id="email" class="form-control"
-                                           value="{{ old('email', $user->email) }}"
-                                           placeholder="Ingrese el correo electrónico" required>
-                                </div>
-                            </div>
+        table.dataTable thead {
+            background-color: #374151 !important;
+            color: white !important;
+        }
 
-                            <!-- Área -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="area">Área</label>
-                                    <input type="text" name="area" id="area" class="form-control"
-                                           value="{{ old('area', $user->area ?? '') }}"
-                                           placeholder="Ingrese el área" required>
-                                </div>
-                            </div>
-                        </div>
+        table.dataTable tbody tr:nth-child(even) {
+            background-color: #111827 !important;
+        }
 
-                        <div class="row">
-                            <!-- Rol -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="role">Rol</label>
-                                    <select name="role" id="role" class="form-control" required>
-                                        <option value="" disabled>Seleccione un rol</option>
-                                        @foreach ($roles as $role)
-                                            <option value="{{ $role->name }}" 
-                                                {{ $user->roles->contains('name', $role->name) ? 'selected' : '' }}>
-                                                {{ $role->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+        table.dataTable td,
+        table.dataTable th {
+            border-color: #4b5563 !important;
+        }
 
-                            <!-- Contraseña -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="password">Contraseña</label>
-                                    <input type="password" name="password" id="password" class="form-control"
-                                           placeholder="Ingrese una nueva contraseña (opcional)">
-                                </div>
-                            </div>
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            color: white !important;
+        }
 
-                            <!-- Confirmar Contraseña -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="password_confirmation">Repetir Contraseña</label>
-                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control"
-                                           placeholder="Confirme la nueva contraseña (opcional)">
-                                </div>
-                            </div>
-                        </div>
+        select.form-control,
+        input.form-control,
+        .form-select {
+            background-color: #1f2937 !important;
+            color: white !important;
+            border: 1px solid #4b5563;
+        }
 
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa-solid fa-check"></i> Guardar Cambios
-                                </button>
-                                <a href="{{ route('users.index') }}" class="btn btn-secondary">
-                                    <i class="fa-solid fa-ban"></i> Cancelar
-                                </a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+        .btn-primary {
+            background-color: #2563eb !important;
+            border-color: #2563eb !important;
+        }
+
+        .btn {
+            color: white !important;
+        }
+
+        /* Arreglar fondo de tarjetas */
+        .card {
+            background-color: #1f2937 !important;
+            color: white;
+        }
+
+        .card-header {
+            background-color: #374151 !important;
+            color: white;
+        }
+
+        /* Botones de exportar DataTables */
+        .dataTables_wrapper .dt-buttons .btn {
+            background-color: #2563eb !important;
+            color: white !important;
+            border: none;
+        }
+
+        /* MENÚ de Opciones (dropdown de botones DataTables) */
+        .dt-button-collection {
+            background-color: #1f2937 !important;
+            color: white !important;
+            border: 1px solid #4b5563 !important;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .dt-button-collection .dt-button {
+            background-color: #374151 !important;
+            color: white !important;
+            border: none;
+        }
+
+        .dt-button-collection .dt-button:hover {
+            background-color: #2563eb !important;
+            color: white !important;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 @stop
 
 @section('css')
     <style>
-        .form-group label {
-            font-weight: bold;
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* Fondo oscuro para toda la tabla y elementos relacionados */
+        table.dataTable,
+        .table,
+        .table-bordered,
+        .table-striped,
+        .table-hover {
+            background-color: #1f2937 !important;
+            color: white !important;
+        }
+
+        table.dataTable thead {
+            background-color: #374151 !important;
+            color: white !important;
+        }
+
+        table.dataTable tbody tr:nth-child(even) {
+            background-color: #111827 !important;
+        }
+
+        table.dataTable td,
+        table.dataTable th {
+            border-color: #4b5563 !important;
+        }
+
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            color: white !important;
+        }
+
+        select.form-control,
+        input.form-control,
+        .form-select {
+            background-color: #1f2937 !important;
+            color: white !important;
+            border: 1px solid #4b5563;
+        }
+
+        .btn-primary {
+            background-color: #2563eb !important;
+            border-color: #2563eb !important;
+        }
+
+        .btn {
+            color: white !important;
+        }
+
+        /* Arreglar fondo de encabezado del card si es blanco */
+        .card {
+            background-color: #1f2937 !important;
+            color: white;
+        }
+
+        .card-header {
+            background-color: #374151 !important;
+            color: white;
+        }
+
+        .dataTables_wrapper .dt-buttons .btn {
+            background-color: #2563eb !important;
+            color: white !important;
+            border: none;
         }
     </style>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 @stop
 
 @section('js')

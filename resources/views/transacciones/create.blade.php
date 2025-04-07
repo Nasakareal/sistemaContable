@@ -121,18 +121,13 @@
                                 </div>
                             </div>
 
-                            <!-- Partida -->
+                            <<!-- Partida -->
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="partida_id">Partida</label>
                                     <select name="partida_id" id="partida_id"
                                             class="form-control @error('partida_id') is-invalid @enderror">
                                         <option value="">-- Seleccione --</option>
-                                        @foreach ($partidas as $partida)
-                                            <option value="{{ $partida->id }}" {{ old('partida_id') == $partida->id ? 'selected' : '' }}>
-                                                {{ $partida->nombre }}
-                                            </option>
-                                        @endforeach
                                     </select>
                                     @error('partida_id')
                                         <span class="invalid-feedback" role="alert">
@@ -141,6 +136,7 @@
                                     @enderror
                                 </div>
                             </div>
+
 
                             <!-- Unidad Responsable -->
                             <div class="col-md-6">
@@ -224,10 +220,98 @@
 
 @section('css')
     <style>
-        .form-group label {
-            font-weight: bold;
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* Fondo oscuro para toda la tabla y elementos relacionados */
+        table.dataTable,
+        .table,
+        .table-bordered,
+        .table-striped,
+        .table-hover {
+            background-color: #1f2937 !important;
+            color: white !important;
+        }
+
+        table.dataTable thead {
+            background-color: #374151 !important;
+            color: white !important;
+        }
+
+        table.dataTable tbody tr:nth-child(even) {
+            background-color: #111827 !important;
+        }
+
+        table.dataTable td,
+        table.dataTable th {
+            border-color: #4b5563 !important;
+        }
+
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            color: white !important;
+        }
+
+        select.form-control,
+        input.form-control,
+        .form-select {
+            background-color: #1f2937 !important;
+            color: white !important;
+            border: 1px solid #4b5563;
+        }
+
+        .btn-primary {
+            background-color: #2563eb !important;
+            border-color: #2563eb !important;
+        }
+
+        .btn {
+            color: white !important;
+        }
+
+        /* Arreglar fondo de tarjetas */
+        .card {
+            background-color: #1f2937 !important;
+            color: white;
+        }
+
+        .card-header {
+            background-color: #374151 !important;
+            color: white;
+        }
+
+        /* Botones de exportar DataTables */
+        .dataTables_wrapper .dt-buttons .btn {
+            background-color: #2563eb !important;
+            color: white !important;
+            border: none;
+        }
+
+        /* MENÚ de Opciones (dropdown de botones DataTables) */
+        .dt-button-collection {
+            background-color: #1f2937 !important;
+            color: white !important;
+            border: 1px solid #4b5563 !important;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .dt-button-collection .dt-button {
+            background-color: #374151 !important;
+            color: white !important;
+            border: none;
+        }
+
+        .dt-button-collection .dt-button:hover {
+            background-color: #2563eb !important;
+            color: white !important;
         }
     </style>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 @stop
 
 @section('js')
@@ -247,4 +331,51 @@
             });
         @endif
     </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const partidasUrlBase = "{{ url('/get-partidas') }}";
+        const capituloSelect = document.getElementById('capitulo_id');
+        const partidaSelect = document.getElementById('partida_id');
+
+        capituloSelect.addEventListener('change', function() {
+            const capituloId = this.value;
+            console.log('Capítulo seleccionado:', capituloId);
+            if (!capituloId) {
+                partidaSelect.innerHTML = '<option value="">-- Seleccione --</option>';
+                return;
+            }
+
+            partidaSelect.innerHTML = '<option value="">Cargando partidas...</option>';
+
+            const url = `${partidasUrlBase}/${capituloId}?t=${Date.now()}`;
+            console.log('Fetching URL:', url);
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta de la petición');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Partidas recibidas:', data);
+                    partidaSelect.innerHTML = '<option value="">-- Seleccione --</option>';
+                    data.forEach(function(partida) {
+                        const option = document.createElement('option');
+                        option.value = partida.id;
+                        option.text = `${partida.nombre} - ${partida.descripcion}`;
+                        partidaSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al cargar las partidas:', error);
+                    partidaSelect.innerHTML = '<option value="">-- Seleccione --</option>';
+                });
+        });
+    });
+</script>
+
+
+
+
 @stop

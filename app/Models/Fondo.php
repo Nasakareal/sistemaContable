@@ -15,6 +15,12 @@ class Fondo extends Model
         'descripcion'
     ];
 
+    public function cuentasBancarias()
+    {
+        return $this->hasMany(\App\Models\CuentaBancaria::class);
+    }
+
+
     public function unidadesResponsables()
     {
         return $this->hasMany(UnidadResponsable::class);

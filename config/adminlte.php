@@ -194,12 +194,12 @@ return [
     'classes_body' => '',
     'classes_brand' => '',
     'classes_brand_text' => '',
-    'classes_content_wrapper' => '',
+    'classes_content_wrapper' => 'bg-dark',
     'classes_content_header' => '',
     'classes_content' => '',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_topnav' => 'navbar-dark navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
@@ -361,7 +361,7 @@ return [
         [
             'text' => 'Fondos',
             'icon' => 'fa-solid fa-piggy-bank',
-            'classes' => 'bg-blue text-white',
+            'classes' => 'bg-light text-white',
             'submenu' => [
                 [
                     'text' => 'Listado de Fondos',
@@ -374,7 +374,7 @@ return [
         [
             'text' => 'Cuentas Bancarias',
             'icon' => 'fa-solid fa-money-check-dollar',
-            'classes' => 'bg-blue text-white',
+            'classes' => 'bg-light text-white',
             'submenu' => [
                 [
                     'text' => 'Listado de Cuentas Bancarias',
@@ -387,7 +387,7 @@ return [
         [
             'text' => 'Capitulos',
             'icon' => 'fa-solid fa-chart-bar',
-            'classes' => 'bg-blue text-white',
+            'classes' => 'bg-light text-white',
             'submenu' => [
                 [
                     'text' => 'Listado de Capitulos',
@@ -400,7 +400,7 @@ return [
         [
             'text' => 'Partidas',
             'icon' => 'fa-solid fa-money-check-dollar',
-            'classes' => 'bg-blue text-white',
+            'classes' => 'bg-light text-white',
             'submenu' => [
                 [
                     'text' => 'Listado de Partidas',
@@ -413,7 +413,7 @@ return [
         [
             'text' => 'Unidades Responsables',
             'icon' => 'fa-solid fa-users',
-            'classes' => 'bg-blue text-white',
+            'classes' => 'bg-light text-white',
             'submenu' => [
                 [
                     'text' => 'Listado de Unidades',
@@ -426,7 +426,7 @@ return [
         [
             'text' => 'Areas',
             'icon' => 'fa-solid fa-city',
-            'classes' => 'bg-blue text-white',
+            'classes' => 'bg-light text-white',
             'submenu' => [
                 [
                     'text' => 'Listado de Areas',
@@ -439,7 +439,7 @@ return [
         [
             'text' => 'Solicitudes Dev',
             'icon' => 'fas fa-hand-holding-usd',
-            'classes' => 'bg-blue text-white',
+            'classes' => 'bg-light text-white',
             'submenu' => [
                 [
                     'text' => 'Listado de Solicitudes',
@@ -452,7 +452,7 @@ return [
         [
             'text' => 'Evidencias Dev',
             'icon' => 'fa-solid fa-magnifying-glass-dollar',
-            'classes' => 'bg-blue text-white',
+            'classes' => 'bg-light text-white',
             'submenu' => [
                 [
                     'text' => 'Listado de Evidencias',
@@ -465,7 +465,7 @@ return [
         [
             'text' => 'Transacciones',
             'icon' => 'fa-solid fa-money-check-dollar',
-            'classes' => 'bg-blue text-white',
+            'classes' => 'bg-light text-white',
             'submenu' => [
                 [
                     'text' => 'Listado de Transacciones',
@@ -475,11 +475,37 @@ return [
             ],
         ],
 
+        [
+            'text' => 'Reportes',
+            'icon' => 'fa-solid fa-chart-gantt',
+            'classes' => 'bg-light text-white',
+            'submenu' => [
+                [
+                    'text' => 'Listado de Reportes',
+                    'icon' => 'fa-regular fa-rectangle-list',
+                    'url' => 'reportes',
+                ],
+            ],
+        ],
+
+        [
+            'text' => 'Ministraciones',
+            'icon' => 'fa-solid fa-file-contract',
+            'classes' => 'bg-light text-white',
+            'submenu' => [
+                [
+                    'text' => 'Listado de Ministraciones',
+                    'icon' => 'fa-regular fa-rectangle-list',
+                    'url' => 'ministraciones',
+                ],
+            ],
+        ],
+
 
         [
             'text' => 'Configuraciones',
             'icon' => 'fas fa-fw fa-gear',
-            'classes' => 'bg-blue text-white',
+            'classes' => 'bg-light text-white',
             'submenu' => [
                 [
                     'text' => 'Listado de Configuraciones',
@@ -719,6 +745,8 @@ return [
             'use_navbar_items' => true,
         ],
     ],
+
+
 
     /*
     |--------------------------------------------------------------------------

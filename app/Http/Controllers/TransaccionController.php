@@ -54,19 +54,30 @@ class TransaccionController extends Controller
             'solicitud_dev_id' => 'nullable|exists:solicitud_devs,id',
         ]);
 
-        \DB::transaction(function () use ($request) {
-            $transaccion = Transaccion::create($request->all());
-
-            $cuenta = CuentaBancaria::find($request->cuenta_bancaria_id);
-            if ($cuenta) {
-                if ($request->tipo === 'ingreso') {
-                    $cuenta->saldo += $request->monto;
-                } else {
-                    $cuenta->saldo -= $request->monto;
+        try {
+            \DB::transaction(function () use ($request) {
+                if ($request->tipo === 'egreso') {
+                    $cuenta = CuentaBancaria::find($request->cuenta_bancaria_id);
+                    if (!$cuenta || $cuenta->saldo < $request->monto) {
+                        throw new \Exception('Saldo insuficiente para realizar la transacción de egreso.');
+                    }
                 }
-                $cuenta->save();
-            }
-        });
+
+                $transaccion = Transaccion::create($request->all());
+
+                $cuenta = CuentaBancaria::find($request->cuenta_bancaria_id);
+                if ($cuenta) {
+                    if ($request->tipo === 'ingreso') {
+                        $cuenta->saldo += $request->monto;
+                    } else {
+                        $cuenta->saldo -= $request->monto;
+                    }
+                    $cuenta->save();
+                }
+            });
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
 
         return redirect()->route('transacciones.index')
                          ->with('success', 'Transacción registrada correctamente.');
@@ -104,33 +115,40 @@ class TransaccionController extends Controller
             'solicitud_dev_id' => 'nullable|exists:solicitud_devs,id',
         ]);
 
-        \DB::transaction(function () use ($request, $transaccion) {
-            $oldTipo       = $transaccion->tipo;
-            $oldMonto      = $transaccion->monto;
-            $oldCuentaId   = $transaccion->cuenta_bancaria_id;
+        try {
+            \DB::transaction(function () use ($request, $transaccion) {
+                $oldTipo       = $transaccion->tipo;
+                $oldMonto      = $transaccion->monto;
+                $oldCuentaId   = $transaccion->cuenta_bancaria_id;
 
-            $oldCuenta = CuentaBancaria::find($oldCuentaId);
-            if ($oldCuenta) {
-                if ($oldTipo === 'ingreso') {
-                    $oldCuenta->saldo -= $oldMonto;
-                } else {
-                    $oldCuenta->saldo += $oldMonto;
+                $oldCuenta = CuentaBancaria::find($oldCuentaId);
+                if ($oldCuenta) {
+                    if ($oldTipo === 'ingreso') {
+                        $oldCuenta->saldo -= $oldMonto;
+                    } else {
+                        $oldCuenta->saldo += $oldMonto;
+                    }
+                    $oldCuenta->save();
                 }
-                $oldCuenta->save();
-            }
 
-            $transaccion->update($request->all());
+                $transaccion->update($request->all());
 
-            $newCuenta = CuentaBancaria::find($transaccion->cuenta_bancaria_id);
-            if ($newCuenta) {
-                if ($transaccion->tipo === 'ingreso') {
-                    $newCuenta->saldo += $transaccion->monto;
-                } else {
-                    $newCuenta->saldo -= $transaccion->monto;
+                $newCuenta = CuentaBancaria::find($transaccion->cuenta_bancaria_id);
+                if ($newCuenta) {
+                    if ($transaccion->tipo === 'egreso') {
+                        if ($newCuenta->saldo < $transaccion->monto) {
+                            throw new \Exception('Saldo insuficiente en la cuenta para actualizar la transacción de egreso.');
+                        }
+                        $newCuenta->saldo -= $transaccion->monto;
+                    } else {
+                        $newCuenta->saldo += $transaccion->monto;
+                    }
+                    $newCuenta->save();
                 }
-                $newCuenta->save();
-            }
-        });
+            });
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
 
         return redirect()->route('transacciones.index')->with('success', 'Transacción actualizada correctamente.');
     }

@@ -1,4 +1,4 @@
-<aside class="main-sidebar" style="background-color: #B0D9B1; color: #000;">
+<aside class="main-sidebar" style="background-color: #2E3B4E; color: #000;">
 
 
     {{-- Sidebar brand logo --}}

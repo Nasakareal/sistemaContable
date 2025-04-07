@@ -1,9 +1,17 @@
 {
   "ExpandedNodes": [
     "",
+    "\\app",
+    "\\app\\Http",
+    "\\app\\Http\\Controllers",
     "\\database",
-    "\\database\\seeders"
+    "\\database\\migrations",
+    "\\database\\seeders",
+    "\\resources",
+    "\\resources\\views",
+    "\\resources\\views\\admin",
+    "\\resources\\views\\admin\\settings"
   ],
-  "SelectedNode": "\\database\\seeders\\CapituloSeeder.php",
+  "SelectedNode": "\\database\\seeders\\MinistracionSeeder.php",
   "PreviewInSolutionExplorer": false
 }

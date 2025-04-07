@@ -78,6 +78,24 @@ class RolesAndPermissionsSeeder extends Seeder
             'editar transacciones',
             'eliminar transacciones',
 
+            // Reportes
+            'ver reportes',
+            'crear reportes',
+            'editar reportes',
+            'eliminar reportes',
+
+            // Ministraciones
+            'ver ministraciones',
+            'crear ministraciones',
+            'editar ministraciones',
+            'eliminar ministraciones',
+
+            // Asignación Presupuestal
+            'ver asignacionpresupuestal',
+            'crear asignacionpresupuestal',
+            'editar asignacionpresupuestal',
+            'eliminar asignacionpresupuestal',
+
         ];
 
         // Crear permisos si no existen

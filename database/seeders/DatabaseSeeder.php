@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             SolicitudDevSeeder::class,
             EvidenciaSeeder::class,
             TransaccionSeeder::class,
+            MinistracionSeeder::class,
+            AsignacionesPresupuestalesSeeder::class,
         ]);
     }
 }

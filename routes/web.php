@@ -18,6 +18,28 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Endpoint JSON para el dashboard (datos reales)
 Route::get('/dashboard.json', [App\Http\Controllers\HomeController::class, 'json'])->name('dashboard.json');
 
+// Rutas para Ministraciones
+Route::prefix('ministraciones')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\MinistracionController::class, 'index'])->middleware('can:ver ministraciones')->name('ministraciones.index');
+    Route::get('/create', [App\Http\Controllers\MinistracionController::class, 'create'])->middleware('can:crear ministraciones')->name('ministraciones.create');
+    Route::post('/', [App\Http\Controllers\MinistracionController::class, 'store'])->middleware('can:crear ministraciones')->name('ministraciones.store');
+    Route::get('/{ministracion}', [App\Http\Controllers\MinistracionController::class, 'show'])->middleware('can:ver ministraciones')->name('ministraciones.show');
+    Route::get('/{ministracion}/edit', [App\Http\Controllers\MinistracionController::class, 'edit'])->middleware('can:editar ministraciones')->name('ministraciones.edit');
+    Route::put('/{ministracion}', [App\Http\Controllers\MinistracionController::class, 'update'])->middleware('can:editar ministraciones')->name('ministraciones.update');
+    Route::delete('/{ministracion}', [App\Http\Controllers\MinistracionController::class, 'destroy'])->middleware('can:eliminar ministraciones')->name('ministraciones.destroy');
+});
+
+// Rutas para Reportes
+Route::prefix('reportes')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\ReporteController::class, 'index'])->middleware('can:ver reportes')->name('reportes.index');
+    Route::get('/excel', [App\Http\Controllers\ReporteController::class, 'exportExcel'])->middleware('can:exportar reportes')->name('reportes.excel');
+    Route::get('/pdf', [App\Http\Controllers\ReporteController::class, 'exportPdf'])->middleware('can:exportar reportes')->name('reportes.pdf');
+    Route::get('/banco', [App\Http\Controllers\ReporteController::class, 'banco'])->middleware('can:ver reportes')->name('reportes.banco.index');
+});
+
+// routes/web.php
+Route::get('/get-partidas/{id}', [App\Http\Controllers\PartidaController::class, 'getPartidas'])->name('get.partidas');
+
 // Rutas para Transacciones
 Route::prefix('transacciones')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\TransaccionController::class, 'index'])->middleware('can:ver transacciones')->name('transacciones.index');
@@ -156,6 +178,17 @@ Route::prefix('admin/settings')->middleware('can:ver configuraciones')->group(fu
         Route::delete('/{role}', [App\Http\Controllers\RoleController::class, 'destroy'])->middleware('can:eliminar roles')->name('roles.destroy');
         Route::get('/{role}/permissions', [App\Http\Controllers\RoleController::class, 'permissions'])->middleware('can:editar roles')->name('roles.permissions');
         Route::post('/{role}/permissions', [App\Http\Controllers\RoleController::class, 'assignPermissions'])->middleware('can:editar roles')->name('roles.assignPermissions');
+    });
+
+    // Asignación Presupuestal
+    Route::prefix('asignacion_presupuestal')->middleware('can:ver asignacionpresupuestal')->group(function () {
+        Route::get('/', [App\Http\Controllers\AsignacionPresupuestalController::class, 'index'])->name('asignacion_presupuestal.index');
+        Route::get('/create', [App\Http\Controllers\AsignacionPresupuestalController::class, 'create'])->middleware('can:crear asignacionpresupuestal')->name('asignacion_presupuestal.create');
+        Route::post('/', [App\Http\Controllers\AsignacionPresupuestalController::class, 'store'])->middleware('can:crear asignacionpresupuestal')->name('asignacion_presupuestal.store');
+        Route::get('/{asignacion}', [App\Http\Controllers\AsignacionPresupuestalController::class, 'show'])->middleware('can:ver asignacionpresupuestal')->name('asignacion_presupuestal.show');
+        Route::get('/{asignacion}/edit', [App\Http\Controllers\AsignacionPresupuestalController::class, 'edit'])->middleware('can:editar asignacionpresupuestal')->name('asignacion_presupuestal.edit');
+        Route::put('/{asignacion}', [App\Http\Controllers\AsignacionPresupuestalController::class, 'update'])->middleware('can:editar asignacionpresupuestal')->name('asignacion_presupuestal.update');
+        Route::delete('/{asignacion}', [App\Http\Controllers\AsignacionPresupuestalController::class, 'destroy'])->middleware('can:eliminar asignacionpresupuestal')->name('asignacion_presupuestal.destroy');
     });
 
     // Actividad
