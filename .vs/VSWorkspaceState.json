@@ -6,10 +6,10 @@
     "\\app\\Http\\Controllers",
     "\\resources",
     "\\resources\\views",
-    "\\resources\\views\\admin",
-    "\\resources\\views\\admin\\settings",
-    "\\resources\\views\\admin\\settings\\users"
+    "\\resources\\views\\ministraciones",
+    "\\resources\\views\\partidas",
+    "\\resources\\views\\solicitudesDev"
   ],
-  "SelectedNode": "\\app\\Http\\Controllers\\UserController.php",
+  "SelectedNode": "\\resources\\views\\ministraciones\\show.blade.php",
   "PreviewInSolutionExplorer": false
 }
