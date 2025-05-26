@@ -11,16 +11,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesAndPermissionsSeeder::class,
             UsersSeeder::class,
-            FondoSeeder::class,
-            CuentaBancariaSeeder::class,
-            CapituloSeeder::class,
-            PartidaSeeder::class,
-            AreaSeeder::class,
-            SolicitudDevSeeder::class,
-            EvidenciaSeeder::class,
-            TransaccionSeeder::class,
-            MinistracionSeeder::class,
-            AsignacionesPresupuestalesSeeder::class,
         ]);
     }
 }

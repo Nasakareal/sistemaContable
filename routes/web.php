@@ -18,6 +18,18 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Endpoint JSON para el dashboard (datos reales)
 Route::get('/dashboard.json', [App\Http\Controllers\HomeController::class, 'json'])->name('dashboard.json');
 
+// Rutas para Movimientos
+Route::prefix('movimientos')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\MovimientoController::class, 'index'])->middleware('can:ver movimientos')->name('movimientos.index');
+    Route::get('/create', [App\Http\Controllers\MovimientoController::class, 'create'])->middleware('can:crear movimientos')->name('movimientos.create');
+    Route::post('/', [App\Http\Controllers\MovimientoController::class, 'store'])->middleware('can:crear movimientos')->name('movimientos.store');
+    Route::get('/{movimiento}', [App\Http\Controllers\MovimientoController::class, 'show'])->middleware('can:ver movimientos')->name('movimientos.show');
+    Route::get('/{movimiento}/edit', [App\Http\Controllers\MovimientoController::class, 'edit'])->middleware('can:editar movimientos')->name('movimientos.edit');
+    Route::put('/{movimiento}', [App\Http\Controllers\MovimientoController::class, 'update'])->middleware('can:editar movimientos')->name('movimientos.update');
+    Route::delete('/{movimiento}', [App\Http\Controllers\MovimientoController::class, 'destroy'])->middleware('can:eliminar movimientos')->name('movimientos.destroy');
+});
+
+
 // Rutas para Ministraciones
 Route::prefix('ministraciones')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\MinistracionController::class, 'index'])->middleware('can:ver ministraciones')->name('ministraciones.index');

@@ -63,6 +63,24 @@ return [
             ]) : [],
         ],
 
+        // Conexión adicional para sistemaInventarios
+        'inventarios' => [
+            'driver' => 'mysql',
+            'host' => '127.0.0.1',
+            'port' => '3306',
+            'database' => 'sistemainventarios',
+            'username' => 'jaggerjack',
+            'password' => 'IAMTHELobosolitario117$',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_spanish_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => 'InnoDB',
+        ],
+
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

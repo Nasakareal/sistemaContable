@@ -7,8 +7,8 @@
     "\\resources",
     "\\resources\\views",
     "\\resources\\views\\ministraciones",
-    "\\resources\\views\\partidas",
-    "\\resources\\views\\solicitudesDev"
+    "\\resources\\views\\movimientos",
+    "\\routes"
   ],
   "SelectedNode": "\\resources\\views\\ministraciones\\show.blade.php",
   "PreviewInSolutionExplorer": false

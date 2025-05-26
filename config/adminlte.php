@@ -368,17 +368,9 @@ return [
                     'icon' => 'fa-regular fa-rectangle-list',
                     'url' => 'fondos',
                 ],
-            ],
-        ],
-
-        [
-            'text' => 'Cuentas Bancarias',
-            'icon' => 'fa-solid fa-money-check-dollar',
-            'classes' => 'bg-light text-white',
-            'submenu' => [
                 [
                     'text' => 'Listado de Cuentas Bancarias',
-                    'icon' => 'fa-regular fa-rectangle-list',
+                    'icon' => 'fa-solid fa-money-check-dollar',
                     'url' => 'cuentas',
                 ],
             ],
@@ -394,17 +386,9 @@ return [
                     'icon' => 'fa-regular fa-rectangle-list',
                     'url' => 'capitulos',
                 ],
-            ],
-        ],
-
-        [
-            'text' => 'Partidas',
-            'icon' => 'fa-solid fa-money-check-dollar',
-            'classes' => 'bg-light text-white',
-            'submenu' => [
                 [
                     'text' => 'Listado de Partidas',
-                    'icon' => 'fa-regular fa-rectangle-list',
+                    'icon' => 'fa-solid fa-money-check-dollar',
                     'url' => 'partidas',
                 ],
             ],
@@ -420,17 +404,9 @@ return [
                     'icon' => 'fa-regular fa-rectangle-list',
                     'url' => 'unidad_responsables',
                 ],
-            ],
-        ],
-
-        [
-            'text' => 'Areas',
-            'icon' => 'fa-solid fa-city',
-            'classes' => 'bg-light text-white',
-            'submenu' => [
                 [
                     'text' => 'Listado de Areas',
-                    'icon' => 'fa-regular fa-rectangle-list',
+                    'icon' => 'fa-solid fa-city',
                     'url' => 'areas',
                 ],
             ],
@@ -446,17 +422,9 @@ return [
                     'icon' => 'fa-regular fa-rectangle-list',
                     'url' => 'solicitudesDev',
                 ],
-            ],
-        ],
-
-        [
-            'text' => 'Evidencias Dev',
-            'icon' => 'fa-solid fa-magnifying-glass-dollar',
-            'classes' => 'bg-light text-white',
-            'submenu' => [
                 [
                     'text' => 'Listado de Evidencias',
-                    'icon' => 'fa-regular fa-rectangle-list',
+                    'icon' => 'fa-solid fa-magnifying-glass-dollar',
                     'url' => 'evidencias',
                 ],
             ],
@@ -471,6 +439,11 @@ return [
                     'text' => 'Listado de Transacciones',
                     'icon' => 'fa-regular fa-rectangle-list',
                     'url' => 'transacciones',
+                ],
+                [
+                    'text' => 'Listado de Movimientos',
+                    'icon' => 'fa-solid fa-calendar-days',
+                    'url' => 'movimientos',
                 ],
             ],
         ],

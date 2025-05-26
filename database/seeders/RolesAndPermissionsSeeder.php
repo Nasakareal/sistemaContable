@@ -96,6 +96,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'editar asignacionpresupuestal',
             'eliminar asignacionpresupuestal',
 
+            // Movimientos
+            'ver movimientos',
+            'crear movimientos',
+            'editar movimientos',
+            'eliminar movimientos',
+
         ];
 
         // Crear permisos si no existen
