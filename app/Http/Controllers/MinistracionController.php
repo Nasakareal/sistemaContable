@@ -8,6 +8,7 @@ use App\Models\CuentaBancaria;
 use App\Models\UnidadResponsable;
 use App\Models\Partida;
 use Illuminate\Http\Request;
+use App\Models\Capitulo;
 
 class MinistracionController extends Controller
 {
@@ -23,8 +24,9 @@ class MinistracionController extends Controller
         $cuentas = CuentaBancaria::all();
         $unidades = UnidadResponsable::all();
         $partidas = Partida::all();
+        $capitulos = Capitulo::all();
 
-        return view('ministraciones.create', compact('fondos', 'cuentas', 'unidades', 'partidas'));
+        return view('ministraciones.create', compact('fondos', 'cuentas', 'unidades', 'partidas', 'capitulos'));
     }
 
     public function store(Request $request)
@@ -52,10 +54,17 @@ class MinistracionController extends Controller
             'cuenta_aplicacion' => 'nullable|string|max:255',
         ]);
 
-        Ministracion::create($request->all());
+        // Registrar ministración
+        $ministracion = Ministracion::create($request->all());
+
+        // Actualizar el saldo de la cuenta bancaria
+        $cuenta = CuentaBancaria::find($request->cuenta_bancaria_id);
+        $cuenta->saldo += $request->importe;
+        $cuenta->save();
 
         return redirect()->route('ministraciones.index')->with('success', 'Ministración registrada correctamente.');
     }
+
 
     public function show(Ministracion $ministracion)
     {
@@ -64,13 +73,15 @@ class MinistracionController extends Controller
 
     public function edit(Ministracion $ministracion)
     {
-        $fondos = Fondo::all();
-        $cuentas = CuentaBancaria::all();
-        $unidades = UnidadResponsable::all();
-        $partidas = Partida::all();
+        $fondos     = Fondo::all();
+        $cuentas    = CuentaBancaria::all();
+        $unidades   = UnidadResponsable::all();
+        $partidas   = Partida::all();
+        $capitulos  = \App\Models\Capitulo::all();
 
-        return view('ministraciones.edit', compact('ministracion', 'fondos', 'cuentas', 'unidades', 'partidas'));
+        return view('ministraciones.edit', compact('ministracion', 'fondos', 'cuentas', 'unidades', 'partidas', 'capitulos'));
     }
+
 
     public function update(Request $request, Ministracion $ministracion)
     {
@@ -97,6 +108,25 @@ class MinistracionController extends Controller
             'cuenta_aplicacion' => 'nullable|string|max:255',
         ]);
 
+        // Si se cambió la cuenta, ajustar ambas
+        if ($request->cuenta_bancaria_id != $ministracion->cuenta_bancaria_id) {
+            // Restar a la anterior
+            $cuentaAnterior = CuentaBancaria::find($ministracion->cuenta_bancaria_id);
+            $cuentaAnterior->saldo -= $ministracion->importe;
+            $cuentaAnterior->save();
+
+            // Sumar a la nueva
+            $cuentaNueva = CuentaBancaria::find($request->cuenta_bancaria_id);
+            $cuentaNueva->saldo += $request->importe;
+            $cuentaNueva->save();
+        } else {
+            // Solo ajustar el saldo en la misma cuenta
+            $cuenta = CuentaBancaria::find($request->cuenta_bancaria_id);
+            $cuenta->saldo -= $ministracion->importe;
+            $cuenta->saldo += $request->importe;
+            $cuenta->save();
+        }
+
         $ministracion->update($request->all());
 
         return redirect()->route('ministraciones.index')->with('success', 'Ministración actualizada correctamente.');
@@ -104,6 +134,10 @@ class MinistracionController extends Controller
 
     public function destroy(Ministracion $ministracion)
     {
+        $cuenta = CuentaBancaria::find($ministracion->cuenta_bancaria_id);
+        $cuenta->saldo -= $ministracion->importe;
+        $cuenta->save();
+
         $ministracion->delete();
 
         return redirect()->route('ministraciones.index')->with('success', 'Ministración eliminada correctamente.');

@@ -12,6 +12,13 @@ Route::middleware(['auth'])->group(function () {
 
 Auth::routes();
 
+// Partidas por capítulo
+Route::get('/partidas/capitulo/{id}', [App\Http\Controllers\PartidaController::class, 'getPartidas'])->middleware('auth');
+
+// Cuentas por fondo
+Route::get('/cuentas/fondo/{id}', [App\Http\Controllers\CuentaBancariaController::class, 'getCuentasPorFondo'])->middleware('auth');
+
+
 // Home
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

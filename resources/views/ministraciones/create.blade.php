@@ -60,12 +60,8 @@
                                     <select name="cuenta_bancaria_id" id="cuenta_bancaria_id"
                                             class="form-control @error('cuenta_bancaria_id') is-invalid @enderror" required>
                                         <option value="">Seleccione una cuenta</option>
-                                        @foreach ($cuentas as $cuenta)
-                                            <option value="{{ $cuenta->id }}" {{ old('cuenta_bancaria_id') == $cuenta->id ? 'selected' : '' }}>
-                                                {{ $cuenta->nombre }} ({{ $cuenta->numero }})
-                                            </option>
-                                        @endforeach
                                     </select>
+
                                     @error('cuenta_bancaria_id')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -96,6 +92,20 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <!-- Capítulo -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="capitulo_id">Capítulo</label>
+                                    <select id="capitulo_id" class="form-control">
+                                        <option value="">Seleccione un capítulo</option>
+                                        @foreach ($capitulos as $capitulo)
+                                            <option value="{{ $capitulo->id }}">{{ $capitulo->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
 
                             <!-- Partida -->
                             <div class="col-md-6">
@@ -359,4 +369,41 @@
             });
         @endif
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Al seleccionar un fondo, cargar cuentas bancarias
+            document.getElementById('fondo_id').addEventListener('change', function () {
+                const fondoId = this.value;
+                const cuentaSelect = document.getElementById('cuenta_bancaria_id');
+                cuentaSelect.innerHTML = '<option value="">Cargando...</option>';
+
+                fetch(`{{ url('/cuentas/fondo') }}/${fondoId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        cuentaSelect.innerHTML = '<option value="">Seleccione una cuenta</option>';
+                        data.forEach(cuenta => {
+                            cuentaSelect.innerHTML += `<option value="${cuenta.id}">${cuenta.nombre} (${cuenta.numero})</option>`;
+                        });
+                    });
+            });
+
+            // Al seleccionar un capítulo, cargar partidas
+            document.getElementById('capitulo_id').addEventListener('change', function () {
+                const capituloId = this.value;
+                const partidaSelect = document.getElementById('partida_id');
+                partidaSelect.innerHTML = '<option value="">Cargando...</option>';
+
+                fetch(`{{ url('/partidas/capitulo') }}/${capituloId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        partidaSelect.innerHTML = '<option value="">Seleccione una partida</option>';
+                        data.forEach(partida => {
+                            partidaSelect.innerHTML += `<option value="${partida.id}">${partida.nombre}</option>`;
+                        });
+                    });
+            });
+        });
+    </script>
+
 @stop

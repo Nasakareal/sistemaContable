@@ -65,14 +65,14 @@ class PartidaController extends Controller
 
     public function getPartidas($id)
     {
-        // Forzar a entero en caso de que se reciba como string
         $id = (int)$id;
         $partidas = Partida::where('capitulo_id', $id)->get();
-        // Para depurar, temporalmente descomenta:
-        // dd($id, $partidas);
         return response()->json($partidas);
     }
 
-
+    public function partidasPorCapitulo($capitulo_id)
+    {
+        return Partida::where('capitulo_id', $capitulo_id)->get();
+    }
 
 }

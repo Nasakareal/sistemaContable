@@ -58,11 +58,6 @@
                                     <select name="cuenta_bancaria_id" id="cuenta_bancaria_id"
                                             class="form-control @error('cuenta_bancaria_id') is-invalid @enderror" required>
                                         <option value="">Seleccione una cuenta</option>
-                                        @foreach ($cuentas as $cuenta)
-                                            <option value="{{ $cuenta->id }}" {{ old('cuenta_bancaria_id', $ministracion->cuenta_bancaria_id) == $cuenta->id ? 'selected' : '' }}>
-                                                {{ $cuenta->nombre }} ({{ $cuenta->numero }})
-                                            </option>
-                                        @endforeach
                                     </select>
                                     @error('cuenta_bancaria_id')
                                         <span class="invalid-feedback">{{ $message }}</span>
@@ -90,6 +85,17 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <select id="capitulo_id" class="form-control">
+                                <option value="">Seleccione un capítulo</option>
+                                @foreach ($capitulos as $capitulo)
+                                    <option value="{{ $capitulo->id }}"
+                                        {{ $ministracion->partida && $ministracion->partida->capitulo_id == $capitulo->id ? 'selected' : '' }}>
+                                        {{ $capitulo->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+
 
                             <!-- Partida -->
                             <div class="col-md-6">
@@ -342,4 +348,34 @@
             });
         @endif
     </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fondoSelect = document.getElementById('fondo_id');
+        const cuentaSelect = document.getElementById('cuenta_bancaria_id');
+        const cuentaSeleccionada = {{ $ministracion->cuenta_bancaria_id ?? 'null' }};
+
+        function cargarCuentas(fondoId) {
+            cuentaSelect.innerHTML = '<option value="">Cargando...</option>';
+            fetch(`{{ url('/cuentas/fondo') }}/${fondoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    cuentaSelect.innerHTML = '<option value="">Seleccione una cuenta</option>';
+                    data.forEach(cuenta => {
+                        const selected = cuenta.id == cuentaSeleccionada ? 'selected' : '';
+                        cuentaSelect.innerHTML += `<option value="${cuenta.id}" ${selected}>${cuenta.nombre} (${cuenta.numero})</option>`;
+                    });
+                });
+        }
+
+        if (fondoSelect.value) {
+            cargarCuentas(fondoSelect.value);
+        }
+
+        fondoSelect.addEventListener('change', function () {
+            cargarCuentas(this.value);
+        });
+    });
+    </script>
+
 @stop

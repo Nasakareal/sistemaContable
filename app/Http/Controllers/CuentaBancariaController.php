@@ -64,4 +64,10 @@ class CuentaBancariaController extends Controller
         $cuenta->delete();
         return redirect()->route('cuentas')->with('success', 'Cuenta bancaria eliminada correctamente.');
     }
+
+    public function getCuentasPorFondo($fondo_id)
+    {
+        return response()->json(\App\Models\CuentaBancaria::where('fondo_id', $fondo_id)->get());
+    }
+
 }
