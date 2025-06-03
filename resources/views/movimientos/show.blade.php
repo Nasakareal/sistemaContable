@@ -43,6 +43,18 @@
             <a href="{{ route('movimientos.index') }}" class="btn btn-secondary mt-3">
                 <i class="fa fa-arrow-left"></i> Volver al listado
             </a>
+
+            <form action="{{ route('movimientos.alertar', $requisicion->id) }}" method="POST" class="mt-3">
+                @csrf
+                <div class="form-group">
+                    <label for="mensaje" class="fw-bold">Mensaje de alerta <span class="text-danger">*</span></label>
+                    <textarea name="mensaje" id="mensaje" class="form-control" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-warning mt-2">
+                    <i class="fas fa-bell"></i> Enviar alerta a sistemaInventarios
+                </button>
+            </form>
+
         </div>
     </div>
 @stop

@@ -69,6 +69,33 @@ class MovimientoController extends Controller
         return view('movimientos.show', compact('requisicion'));
     }
 
+    public function alertar(Request $request, $id)
+    {
+        $request->validate([
+            'mensaje' => 'required|string|max:5000',
+        ]);
+
+        $requisicion = DB::connection('inventarios')
+            ->table('requisiciones')
+            ->where('id', $id)
+            ->first();
+
+        if (!$requisicion) {
+            return back()->with('error', 'Requisición no encontrada');
+        }
+
+        DB::connection('inventarios')->table('alerts')->insert([
+            'tipo'     => 'Requisición',
+            'mensaje'  => $request->mensaje,
+            'origen'   => 'sistemaContable',
+            'leido'    => 0,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return back()->with('success', '¡Alerta enviada correctamente!');
+    }
+
 
 
     public function edit(Area $area)

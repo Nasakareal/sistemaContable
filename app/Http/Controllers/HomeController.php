@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CuentaBancaria;
 use App\Models\Transaccion;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -47,11 +48,17 @@ class HomeController extends Controller
             ->pluck('total','tipo');
 
         // 5. Top 5 Egresos (reales)
-        $topEgresos = Transaccion::select('descripcion as concepto', 'monto')
-            ->where('tipo','egreso')
-            ->orderByDesc('monto')
-            ->limit(5)
-            ->get();
+        try {
+            $topEgresos = DB::connection('inventarios')
+                ->table('requisiciones')
+                ->select('producto_material as concepto', 'monto')
+                ->whereNotNull('monto')
+                ->orderByDesc('monto')
+                ->limit(5)
+                ->get();
+        } catch (\Exception $e) {
+            dd('Error al cargar topEgresos: ' . $e->getMessage());
+        }
 
         // 6. Top 5 Ingresos (reales)
         $topIngresos = Transaccion::select('descripcion as concepto', 'monto')

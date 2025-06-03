@@ -6,9 +6,9 @@
     "\\app\\Http\\Controllers",
     "\\resources",
     "\\resources\\views",
-    "\\resources\\views\\ministraciones",
+    "\\resources\\views\\movimientos",
     "\\routes"
   ],
-  "SelectedNode": "\\app\\Http\\Controllers\\MinistracionController.php",
+  "SelectedNode": "\\app\\Http\\Controllers\\MovimientoController.php",
   "PreviewInSolutionExplorer": false
 }

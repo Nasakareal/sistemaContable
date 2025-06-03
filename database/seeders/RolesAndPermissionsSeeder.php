@@ -102,6 +102,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'editar movimientos',
             'eliminar movimientos',
 
+            // Estadisticas
+            'ver estadisticas',
+            'crear estadisticas',
+            'editar estadisticas',
+            'eliminar estadisticas',
+
         ];
 
         // Crear permisos si no existen

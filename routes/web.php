@@ -12,6 +12,8 @@ Route::middleware(['auth'])->group(function () {
 
 Auth::routes();
 
+Route::post('/certificados/generar-p12', [App\Http\Controllers\CertificadoController::class, 'generarP12'])->name('certificados.generarP12');
+
 // Partidas por capítulo
 Route::get('/partidas/capitulo/{id}', [App\Http\Controllers\PartidaController::class, 'getPartidas'])->middleware('auth');
 
@@ -31,6 +33,7 @@ Route::prefix('movimientos')->middleware('auth')->group(function () {
     Route::get('/create', [App\Http\Controllers\MovimientoController::class, 'create'])->middleware('can:crear movimientos')->name('movimientos.create');
     Route::post('/', [App\Http\Controllers\MovimientoController::class, 'store'])->middleware('can:crear movimientos')->name('movimientos.store');
     Route::get('/{movimiento}', [App\Http\Controllers\MovimientoController::class, 'show'])->middleware('can:ver movimientos')->name('movimientos.show');
+    Route::post('/{movimiento}/alertar', [App\Http\Controllers\MovimientoController::class, 'alertar'])->middleware('can:ver movimientos')->name('movimientos.alertar');
     Route::get('/{movimiento}/edit', [App\Http\Controllers\MovimientoController::class, 'edit'])->middleware('can:editar movimientos')->name('movimientos.edit');
     Route::put('/{movimiento}', [App\Http\Controllers\MovimientoController::class, 'update'])->middleware('can:editar movimientos')->name('movimientos.update');
     Route::delete('/{movimiento}', [App\Http\Controllers\MovimientoController::class, 'destroy'])->middleware('can:eliminar movimientos')->name('movimientos.destroy');
@@ -162,6 +165,17 @@ Route::prefix('fondos')->middleware('auth')->group(function () {
 Route::prefix('admin/settings')->middleware('can:ver configuraciones')->group(function () {
     // Configuración general
     Route::get('/', [App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
+
+    // Estadisticas 
+    Route::prefix('estadisticas')->middleware('can:ver estadisticas')->group(function () {
+        Route::get('/', [App\Http\Controllers\EstadisticaController::class, 'index'])->name('estadisticas.index');
+        Route::get('/create', [App\Http\Controllers\EstadisticaController::class, 'create'])->middleware('can:crear usuarios')->name('estadisticas.create');
+        Route::post('/', [App\Http\Controllers\EstadisticaController::class, 'store'])->middleware('can:crear usuarios')->name('estadisticas.store');
+        Route::get('/{estadistica}', [App\Http\Controllers\EstadisticaController::class, 'show'])->middleware('can:ver usuarios')->name('estadisticas.show');
+        Route::get('/{estadistica}/edit', [App\Http\Controllers\EstadisticaController::class, 'edit'])->middleware('can:editar usuarios')->name('estadisticas.edit');
+        Route::put('/{estadistica}', [App\Http\Controllers\EstadisticaController::class, 'update'])->middleware('can:editar usuarios')->name('estadisticas.update');
+        Route::delete('/{estadistica}', [App\Http\Controllers\EstadisticaController::class, 'destroy'])->middleware('can:eliminar usuarios')->name('estadisticas.destroy');
+    });
 
     // Cuentas
     Route::prefix('cuentas')->middleware('can:ver cuentas')->group(function () {
