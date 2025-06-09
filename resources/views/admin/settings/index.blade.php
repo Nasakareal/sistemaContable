@@ -64,13 +64,13 @@
             </div>
         </div>
 
-        <!-- Vacias Base de Datos -->
+        <!-- Proyecciones Presupuestales -->
         <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
-                <span class="info-box-icon bg-danger"><i class="fa-solid fa-dumpster"></i></span>
+                <span class="info-box-icon bg-fuchsia"><i class="fa-solid fa-chart-line"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text"><b>Vaciar Base de Datos</b></span>
-                    <a href="{{ url('/admin/vaciados') }}" class="btn btn-primary btn-sm">Acceder</a>
+                    <span class="info-box-text"><b>Proyección Presupuestal</b></span>
+                    <a href="{{ url('/admin/settings/proyecciones') }}" class="btn btn-primary btn-sm">Acceder</a>
                 </div>
             </div>
         </div>

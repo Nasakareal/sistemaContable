@@ -2,13 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\app",
-    "\\app\\Http",
-    "\\app\\Http\\Controllers",
+    "\\app\\Exports",
+    "\\app\\Models",
     "\\resources",
     "\\resources\\views",
-    "\\resources\\views\\movimientos",
-    "\\routes"
+    "\\resources\\views\\admin",
+    "\\resources\\views\\admin\\settings",
+    "\\resources\\views\\admin\\settings\\estadisticas",
+    "\\resources\\views\\admin\\settings\\proyecciones"
   ],
-  "SelectedNode": "\\app\\Http\\Controllers\\MovimientoController.php",
+  "SelectedNode": "\\app\\Exports\\MensualExport.php",
   "PreviewInSolutionExplorer": false
 }

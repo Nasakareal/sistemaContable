@@ -108,6 +108,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'editar estadisticas',
             'eliminar estadisticas',
 
+            // Pryecciones
+            'ver proyecciones',
+            'crear proyecciones',
+            'editar proyecciones',
+            'eliminar proyecciones',
+
         ];
 
         // Crear permisos si no existen
@@ -131,16 +137,6 @@ class RolesAndPermissionsSeeder extends Seeder
                 'crear categorias',
                 'editar categorias',
                 'eliminar categorias',
-            ],
-            'Empleado' => [
-                'ver requisiciones',
-                'ver requisiciones por cuenta',
-                'ver productos',
-                'ver proveedores',
-            ],
-            'Observador' => [
-                'ver requisiciones',
-                'ver productos',
             ],
         ];
 

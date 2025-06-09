@@ -4,47 +4,121 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\MensualExport;
+use Illuminate\Support\Facades\DB;
 
 class EstadisticaController extends Controller
 {
     public function index()
     {
         $estadisticas = [
-            ['titulo' => 'Comparativo Mensual', 'ruta' => route('estadisticas.show', 'mensual')],
-            ['titulo' => 'Comparativo Trimestral', 'ruta' => route('estadisticas.show', 'trimestral')],
-            ['titulo' => 'Comparativo Cuatrimestral', 'ruta' => route('estadisticas.show', 'cuatrimestral')],
-            ['titulo' => 'Comparativo Semestral', 'ruta' => route('estadisticas.show', 'semestral')],
-            ['titulo' => 'Ingresos vs Egresos', 'ruta' => route('estadisticas.show', 'ingresos-vs-egresos')],
-            ['titulo' => 'Top 5 Ingresos', 'ruta' => route('estadisticas.show', 'top-ingresos')],
-            ['titulo' => 'Top 5 Egresos', 'ruta' => route('estadisticas.show', 'top-egresos')],
-            ['titulo' => 'Totales por Cuenta Bancaria', 'ruta' => route('estadisticas.show', 'por-cuenta')],
+            [
+                'titulo' => 'Comparativo Mensual',
+                'ver' => route('estadisticas.ver', 'mensual'),
+                'descargar' => route('estadisticas.descargar', 'mensual')
+            ],
+            [
+                'titulo' => 'Ingresos vs Egresos',
+                'ver' => route('estadisticas.ver', 'ingresos-vs-egresos'),
+                'descargar' => route('estadisticas.descargar', 'ingresos-vs-egresos')
+            ],
+            // Agrega más...
         ];
 
         return view('admin.settings.estadisticas.index', compact('estadisticas'));
     }
 
-    public function show($estadistica)
+    public function ver($tipo)
     {
-        switch ($estadistica) {
+        switch ($tipo) {
             case 'mensual':
-                return Excel::download(new \App\Exports\MensualExport, 'comparativo_mensual.xlsx');
-            case 'trimestral':
-                return Excel::download(new \App\Exports\TrimestralExport, 'comparativo_trimestral.xlsx');
-            case 'cuatrimestral':
-                return Excel::download(new \App\Exports\CuatrimestralExport, 'comparativo_cuatrimestral.xlsx');
-            case 'semestral':
-                return Excel::download(new \App\Exports\SemestralExport, 'comparativo_semestral.xlsx');
-            case 'ingresos-vs-egresos':
-                return Excel::download(new \App\Exports\IngresosVsEgresosExport, 'ingresos_vs_egresos.xlsx');
-            case 'top-ingresos':
-                return Excel::download(new \App\Exports\TopIngresosExport, 'top_5_ingresos.xlsx');
-            case 'top-egresos':
-                return Excel::download(new \App\Exports\TopEgresosExport, 'top_5_egresos.xlsx');
-            case 'por-cuenta':
-                return Excel::download(new \App\Exports\PorCuentaExport, 'totales_por_cuenta.xlsx');
+                $filtroMes = request('mes');
+
+                $proyecciones = DB::table('proyecciones')
+                    ->selectRaw('month, SUM(monto) as total')
+                    ->where('year', date('Y'))
+                    ->when($filtroMes, fn($q) => $q->where('month', $filtroMes))
+                    ->groupBy('month')
+                    ->pluck('total', 'month');
+
+                $ministraciones = DB::table('ministraciones')
+                    ->selectRaw('MONTH(fecha) as mes, SUM(importe) as total')
+                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha', $filtroMes))
+                    ->groupByRaw('MONTH(fecha)')
+                    ->pluck('total', 'mes');
+
+                $requisiciones = DB::connection('inventarios')
+                    ->table('requisiciones')
+                    ->selectRaw('MONTH(fecha_requisicion) as mes, SUM(monto) as total')
+                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha_requisicion', $filtroMes))
+                    ->groupByRaw('MONTH(fecha_requisicion)')
+                    ->pluck('total', 'mes');
+
+                $datos = [];
+                for ($mes = 1; $mes <= 12; $mes++) {
+                    if ($filtroMes && $mes != $filtroMes) continue;
+
+                    $datos[] = [
+                        'mes' => ucfirst(\Carbon\Carbon::create()->month($mes)->locale('es')->monthName),
+                        'proyectado' => round($proyecciones[$mes] ?? 0, 2),
+                        'ministrado' => round($ministraciones[$mes] ?? 0, 2),
+                        'recaudado'  => round($requisiciones[$mes] ?? 0, 2),
+                    ];
+                }
+
+                $titulo = 'Comparativo Mensual';
+                return view('admin.settings.estadisticas.vistas.mensual', compact('titulo', 'datos'));
+
             default:
-                abort(404, 'Estadística no encontrada');
+                abort(404, 'Vista de estadística no disponible');
         }
     }
+
+    public function descargar($tipo)
+{
+    switch ($tipo) {
+        case 'mensual':
+            $filtroMes = request('mes');
+
+            $proyecciones = DB::table('proyecciones')
+                ->selectRaw('month, SUM(monto) as total')
+                ->where('year', date('Y'))
+                ->when($filtroMes, fn($q) => $q->where('month', $filtroMes))
+                ->groupBy('month')
+                ->pluck('total', 'month');
+
+            $ministraciones = DB::table('ministraciones')
+                ->selectRaw('MONTH(fecha) as mes, SUM(importe) as total')
+                ->when($filtroMes, fn($q) => $q->whereMonth('fecha', $filtroMes))
+                ->groupByRaw('MONTH(fecha)')
+                ->pluck('total', 'mes');
+
+            $requisiciones = DB::connection('inventarios')
+                ->table('requisiciones')
+                ->selectRaw('MONTH(fecha_requisicion) as mes, SUM(monto) as total')
+                ->when($filtroMes, fn($q) => $q->whereMonth('fecha_requisicion', $filtroMes))
+                ->groupByRaw('MONTH(fecha_requisicion)')
+                ->pluck('total', 'mes');
+
+            $datos = [];
+            for ($mes = 1; $mes <= 12; $mes++) {
+                if ($filtroMes && $mes != $filtroMes) continue;
+
+                $datos[] = [
+                    'mes' => ucfirst(\Carbon\Carbon::create()->month($mes)->locale('es')->monthName),
+                    'proyectado' => round($proyecciones[$mes] ?? 0, 2),
+                    'ministrado' => round($ministraciones[$mes] ?? 0, 2),
+                    'recaudado'  => round($requisiciones[$mes] ?? 0, 2),
+                ];
+            }
+
+            return new MensualExport($datos);
+
+
+        default:
+            abort(404, 'Descarga no disponible');
+    }
+}
+
 
 }

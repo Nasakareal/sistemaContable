@@ -166,16 +166,23 @@ Route::prefix('admin/settings')->middleware('can:ver configuraciones')->group(fu
     // Configuración general
     Route::get('/', [App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
 
-    // Estadisticas 
+    // Proyecciones
+    Route::prefix('proyecciones')->middleware('can:ver proyecciones')->group(function () {
+        Route::get('/', [App\Http\Controllers\ProyeccionController::class, 'index'])->name('proyecciones.index');
+        Route::get('/create', [App\Http\Controllers\ProyeccionController::class, 'create'])->middleware('can:crear proyecciones')->name('proyecciones.create');
+        Route::post('/', [App\Http\Controllers\ProyeccionController::class, 'store'])->middleware('can:crear proyecciones')->name('proyecciones.store');
+        Route::get('/{proyeccion}/edit', [App\Http\Controllers\ProyeccionController::class, 'edit'])->middleware('can:editar proyecciones')->name('proyecciones.edit');
+        Route::put('/{proyeccion}', [App\Http\Controllers\ProyeccionController::class, 'update'])->middleware('can:editar proyecciones')->name('proyecciones.update');
+        Route::delete('/{proyeccion}', [App\Http\Controllers\ProyeccionController::class, 'destroy'])->middleware('can:eliminar proyecciones')->name('proyecciones.destroy');
+    });
+
+    // Estadísticas
     Route::prefix('estadisticas')->middleware('can:ver estadisticas')->group(function () {
         Route::get('/', [App\Http\Controllers\EstadisticaController::class, 'index'])->name('estadisticas.index');
-        Route::get('/create', [App\Http\Controllers\EstadisticaController::class, 'create'])->middleware('can:crear usuarios')->name('estadisticas.create');
-        Route::post('/', [App\Http\Controllers\EstadisticaController::class, 'store'])->middleware('can:crear usuarios')->name('estadisticas.store');
-        Route::get('/{estadistica}', [App\Http\Controllers\EstadisticaController::class, 'show'])->middleware('can:ver usuarios')->name('estadisticas.show');
-        Route::get('/{estadistica}/edit', [App\Http\Controllers\EstadisticaController::class, 'edit'])->middleware('can:editar usuarios')->name('estadisticas.edit');
-        Route::put('/{estadistica}', [App\Http\Controllers\EstadisticaController::class, 'update'])->middleware('can:editar usuarios')->name('estadisticas.update');
-        Route::delete('/{estadistica}', [App\Http\Controllers\EstadisticaController::class, 'destroy'])->middleware('can:eliminar usuarios')->name('estadisticas.destroy');
+        Route::get('/ver/{tipo}', [App\Http\Controllers\EstadisticaController::class, 'ver'])->name('estadisticas.ver');
+        Route::get('/descargar/{tipo}', [App\Http\Controllers\EstadisticaController::class, 'descargar'])->name('estadisticas.descargar');
     });
+
 
     // Cuentas
     Route::prefix('cuentas')->middleware('can:ver cuentas')->group(function () {
