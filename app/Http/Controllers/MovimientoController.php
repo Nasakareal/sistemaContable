@@ -96,7 +96,30 @@ class MovimientoController extends Controller
         return back()->with('success', '¡Alerta enviada correctamente!');
     }
 
+    public function bloquear($id)
+    {
+        $requisicion = DB::connection('inventarios')
+            ->table('requisiciones')
+            ->where('id', $id)
+            ->first();
 
+        if (!$requisicion) {
+            return back()->with('error', 'Requisición no encontrada');
+        }
+
+        $nuevoEstado = $requisicion->bloqueada ? 0 : 1;
+
+        DB::connection('inventarios')
+            ->table('requisiciones')
+            ->where('id', $id)
+            ->update(['bloqueada' => $nuevoEstado]);
+
+        $mensaje = $nuevoEstado
+            ? '¡Requisición bloqueada correctamente!'
+            : '¡Requisición desbloqueada correctamente!';
+
+        return back()->with('success', $mensaje);
+    }
 
     public function edit(Area $area)
     {

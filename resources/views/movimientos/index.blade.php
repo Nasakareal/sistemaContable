@@ -15,7 +15,9 @@
                 </div>
 
                 <div class="card-body">
-                    <table id="movimientos" class="table table-striped table-bordered table-hover table-sm nowrap">
+                    <div class="table-responsive">
+                        <table id="movimientos" class="table table-striped table-bordered table-hover table-sm nowrap">
+
                         <thead>
                             <tr>
                                 <th><center>#</center></th>

@@ -12,7 +12,6 @@ Route::middleware(['auth'])->group(function () {
 
 Auth::routes();
 
-Route::post('/certificados/generar-p12', [App\Http\Controllers\CertificadoController::class, 'generarP12'])->name('certificados.generarP12');
 
 // Partidas por capítulo
 Route::get('/partidas/capitulo/{id}', [App\Http\Controllers\PartidaController::class, 'getPartidas'])->middleware('auth');
@@ -37,6 +36,7 @@ Route::prefix('movimientos')->middleware('auth')->group(function () {
     Route::get('/{movimiento}/edit', [App\Http\Controllers\MovimientoController::class, 'edit'])->middleware('can:editar movimientos')->name('movimientos.edit');
     Route::put('/{movimiento}', [App\Http\Controllers\MovimientoController::class, 'update'])->middleware('can:editar movimientos')->name('movimientos.update');
     Route::delete('/{movimiento}', [App\Http\Controllers\MovimientoController::class, 'destroy'])->middleware('can:eliminar movimientos')->name('movimientos.destroy');
+    Route::post('/movimientos/{id}/bloquear', [App\Http\Controllers\MovimientoController::class, 'bloquear'])->middleware('can:eliminar movimientos')->name('movimientos.bloquear');
 });
 
 

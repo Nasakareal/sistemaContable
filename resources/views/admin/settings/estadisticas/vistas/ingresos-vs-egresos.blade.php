@@ -84,61 +84,104 @@
 
 {{-- Gráfico --}}
 <div class="card">
-    <div class="card-body">
-        <canvas id="graficaIngresosEgresos" height="120"></canvas>
+    <div class="card-body" style="height: 400px;"> {{-- altura fija en el contenedor --}}
+        <canvas id="graficaIngresosEgresos"></canvas> {{-- sin height aquí --}}
     </div>
 </div>
+
+{{-- Pie-chart de destino de recursos --}}
+<div class="card mb-4">
+  <div class="card-body" style="height: 400px;">
+    <canvas id="graficaDestinoRecursos"></canvas>
+  </div>
+</div>
+
+
 @stop
 
 @section('js')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
 <script>
-    const ctx = document.getElementById('graficaIngresosEgresos').getContext('2d');
+  // Esperamos a que la ventana cargue del todo
+  window.addEventListener('load', () => {
+    // 1) Captura de elementos
+    const canvasBarras = document.getElementById('graficaIngresosEgresos');
+    const canvasPie    = document.getElementById('graficaDestinoRecursos');
+    
+    if (!canvasBarras || !canvasPie) return;
 
-    const datos = {
-        labels: {!! json_encode(array_column($datos, 'mes')) !!},
+    // 2) Mostrar en consola los datos PHP para verificar que no estén vacíos
+    const labelsPie = @json(array_merge($capitulos, ['Otro capítulo de gasto']));
+    const dataPie   = @json(array_merge(array_values($capitulos_total), [$otro_capitulo_total]));
+
+    // 3) Inicializar gráfico de barras
+    new Chart(canvasBarras.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: @json(array_column($datos, 'mes')),
         datasets: [
-            {
-                label: 'Ingresos (Ministraciones)',
-                data: {!! json_encode(array_column($datos, 'solo_ministraciones')) !!},
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Egresos (Requisiciones)',
-                data: {!! json_encode(array_column($datos, 'solo_requisiciones')) !!},
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }
+          {
+            label: 'Ingresos',
+            data: @json(array_column($datos, 'solo_ministraciones')),
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            borderColor:     'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Egresos',
+            data: @json(array_column($datos, 'solo_requisiciones')),
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            borderColor:     'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }
         ]
-    };
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' },
+          title: {
+            display: true,
+            text: 'Comparativo Mensual'
+          }
+        },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
 
-    const config = {
-        type: 'bar',
-        data: datos,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'top' },
-                title: {
-                    display: true,
-                    text: 'Comparativo de Ingresos vs Egresos Mensual'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+    // 4) Inicializar pie-chart
+    new Chart(canvasPie.getContext('2d'), {
+      type: 'pie',
+      data: {
+        labels: labelsPie,
+        datasets: [{
+          data: dataPie,
+          backgroundColor: [
+            '#4dc9f6','#f67019','#f53794','#537bc4','#acc236','#e2037e'
+          ],
+          borderColor: [
+            '#ffffff','#ffffff','#ffffff','#ffffff','#ffffff','#ffffff'
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right' },
+          title: {
+            display: true,
+            text: 'Destino de los recursos'
+          }
         }
-    };
-
-    new Chart(ctx, config);
+      }
+    });
+  });
 </script>
 @stop
-
 
 @section('css')
     <style>

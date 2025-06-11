@@ -46,6 +46,14 @@
                 <i class="fa fa-arrow-left"></i> Volver al listado
             </a>
 
+           <form action="{{ route('movimientos.bloquear', $requisicion->id) }}" method="POST" class="mt-3">
+                @csrf
+                <button type="submit" class="btn {{ $requisicion->bloqueada ? 'btn-success' : 'btn-danger' }}">
+                    <i class="fas {{ $requisicion->bloqueada ? 'fa-unlock' : 'fa-lock' }}"></i>
+                    {{ $requisicion->bloqueada ? 'Desbloquear requisición' : 'Marcar como revisada y bloquear en sistemaInventarios' }}
+                </button>
+            </form>
+
             <form action="{{ route('movimientos.alertar', $requisicion->id) }}" method="POST" class="mt-3">
                 @csrf
                 <div class="form-group">

@@ -10,8 +10,9 @@
     "\\resources\\views\\admin\\settings",
     "\\resources\\views\\admin\\settings\\estadisticas",
     "\\resources\\views\\admin\\settings\\estadisticas\\vistas",
+    "\\resources\\views\\movimientos",
     "\\routes"
   ],
-  "SelectedNode": "\\resources\\views\\admin\\settings\\estadisticas\\vistas\\mensual.blade.php",
+  "SelectedNode": "\\resources\\views\\movimientos\\index.blade.php",
   "PreviewInSolutionExplorer": false
 }
