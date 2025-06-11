@@ -18,6 +18,8 @@
                     <tr><th>UR</th><td>{{ $requisicion->ur }}</td></tr>
                     <tr><th>Departamento</th><td>{{ $requisicion->departamento }}</td></tr>
                     <tr><th>Partida</th><td>{{ $requisicion->partida }}</td></tr>
+                    <tr><th>Segunda Partida</th><td>{{ $requisicion->partida2 ?? 'N/A' }}</td></tr>
+
                     <tr><th>Producto o Material</th><td>{{ $requisicion->producto_material }}</td></tr>
                     <tr><th>Justificación</th><td>{{ $requisicion->justificacion }}</td></tr>
                     <tr><th>Oficio de Pago</th><td>{{ $requisicion->oficio_pago }}</td></tr>

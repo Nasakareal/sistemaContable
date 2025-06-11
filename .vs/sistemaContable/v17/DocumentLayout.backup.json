@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "C:\\wamp64\\www\\sistemaContable\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\MovimientoController.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\Http\\Controllers\\MovimientoController.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\app\\Exports\\MensualExport.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\Exports\\MensualExport.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\resources\\views\\movimientos\\show.blade.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:resources\\views\\movimientos\\show.blade.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\EstadisticaController.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\Http\\Controllers\\EstadisticaController.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\app\\Models\\Proyeccion.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\Models\\Proyeccion.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\resources\\views\\admin\\settings\\estadisticas\\vistas\\mensual.blade.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:resources\\views\\admin\\settings\\estadisticas\\vistas\\mensual.blade.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\routes\\web.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
@@ -27,40 +35,66 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "MovimientoController.php",
-              "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\MovimientoController.php",
-              "RelativeDocumentMoniker": "app\\Http\\Controllers\\MovimientoController.php",
-              "ToolTip": "C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\MovimientoController.php",
-              "RelativeToolTip": "app\\Http\\Controllers\\MovimientoController.php",
-              "ViewState": "AgIAADwAAAAAAAAAAAAkwEgAAAAAAAAAAAAAAA==",
+              "Title": "MensualExport.php",
+              "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\app\\Exports\\MensualExport.php",
+              "RelativeDocumentMoniker": "app\\Exports\\MensualExport.php",
+              "ToolTip": "C:\\wamp64\\www\\sistemaContable\\app\\Exports\\MensualExport.php",
+              "RelativeToolTip": "app\\Exports\\MensualExport.php",
+              "ViewState": "AgIAACgAAAAAAAAAAAAiwFQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
-              "WhenOpened": "2025-06-03T03:58:43.874Z",
+              "WhenOpened": "2025-06-09T05:50:00.593Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "Proyeccion.php",
+              "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\app\\Models\\Proyeccion.php",
+              "RelativeDocumentMoniker": "app\\Models\\Proyeccion.php",
+              "ToolTip": "C:\\wamp64\\www\\sistemaContable\\app\\Models\\Proyeccion.php",
+              "RelativeToolTip": "app\\Models\\Proyeccion.php",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAACQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
+              "WhenOpened": "2025-06-09T04:55:44.171Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "web.php",
               "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\routes\\web.php",
               "RelativeDocumentMoniker": "routes\\web.php",
               "ToolTip": "C:\\wamp64\\www\\sistemaContable\\routes\\web.php",
               "RelativeToolTip": "routes\\web.php",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAACcAAAADAAAAAAAAAA==",
+              "ViewState": "AgIAAKUAAAAAAAAAAAAAALcAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
-              "WhenOpened": "2025-06-03T03:58:05.591Z",
+              "WhenOpened": "2025-06-09T04:29:12.912Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "mensual.blade.php",
+              "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\resources\\views\\admin\\settings\\estadisticas\\vistas\\mensual.blade.php",
+              "RelativeDocumentMoniker": "resources\\views\\admin\\settings\\estadisticas\\vistas\\mensual.blade.php",
+              "ToolTip": "C:\\wamp64\\www\\sistemaContable\\resources\\views\\admin\\settings\\estadisticas\\vistas\\mensual.blade.php",
+              "RelativeToolTip": "resources\\views\\admin\\settings\\estadisticas\\vistas\\mensual.blade.php",
+              "ViewState": "AgIAAFUAAAAAAAAAAAAiwN4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
+              "WhenOpened": "2025-06-09T03:55:01.199Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "show.blade.php",
-              "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\resources\\views\\movimientos\\show.blade.php",
-              "RelativeDocumentMoniker": "resources\\views\\movimientos\\show.blade.php",
-              "ToolTip": "C:\\wamp64\\www\\sistemaContable\\resources\\views\\movimientos\\show.blade.php",
-              "RelativeToolTip": "resources\\views\\movimientos\\show.blade.php",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAADgAAAAAAAAAAAAAAA==",
+              "Title": "EstadisticaController.php",
+              "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\EstadisticaController.php",
+              "RelativeDocumentMoniker": "app\\Http\\Controllers\\EstadisticaController.php",
+              "ToolTip": "C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\EstadisticaController.php",
+              "RelativeToolTip": "app\\Http\\Controllers\\EstadisticaController.php",
+              "ViewState": "AgIAAFAAAAAAAAAAAAAiwHwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
-              "WhenOpened": "2025-06-03T03:44:20.484Z",
+              "WhenOpened": "2025-06-09T02:18:33.391Z",
               "EditorCaption": ""
             }
           ]
