@@ -2,17 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\app",
-    "\\app\\Http",
-    "\\app\\Http\\Controllers",
+    "\\app\\Models",
+    "\\config",
+    "\\database",
     "\\resources",
     "\\resources\\views",
-    "\\resources\\views\\admin",
-    "\\resources\\views\\admin\\settings",
-    "\\resources\\views\\admin\\settings\\estadisticas",
-    "\\resources\\views\\admin\\settings\\estadisticas\\vistas",
-    "\\resources\\views\\movimientos",
+    "\\resources\\views\\ministraciones",
+    "\\resources\\views\\viaticos",
     "\\routes"
   ],
-  "SelectedNode": "\\resources\\views\\movimientos\\index.blade.php",
+  "SelectedNode": "\\app\\Models\\ViaticoReal.php",
   "PreviewInSolutionExplorer": false
 }

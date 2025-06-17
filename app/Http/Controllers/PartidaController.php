@@ -66,9 +66,13 @@ class PartidaController extends Controller
     public function getPartidas($id)
     {
         $id = (int)$id;
-        $partidas = Partida::where('capitulo_id', $id)->get();
+        $partidas = Partida::where('capitulo_id', $id)
+            ->select('id', 'nombre', 'descripcion')
+            ->get();
+
         return response()->json($partidas);
     }
+
 
     public function partidasPorCapitulo($capitulo_id)
     {

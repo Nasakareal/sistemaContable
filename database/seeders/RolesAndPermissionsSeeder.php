@@ -108,11 +108,17 @@ class RolesAndPermissionsSeeder extends Seeder
             'editar estadisticas',
             'eliminar estadisticas',
 
-            // Pryecciones
+            // Proyecciones
             'ver proyecciones',
             'crear proyecciones',
             'editar proyecciones',
             'eliminar proyecciones',
+
+            // Viaticos
+            'ver viaticos',
+            'crear viaticos',
+            'editar viaticos',
+            'eliminar viaticos',
 
         ];
 
@@ -124,20 +130,6 @@ class RolesAndPermissionsSeeder extends Seeder
         // Definición de roles y permisos asignados
         $roles = [
             'Administrador' => $permissions,
-            'Subdirector' => [
-                'ver configuraciones',
-                'ver usuarios',
-                'ver roles',
-                'ver requisiciones',
-                'crear requisiciones',
-                'editar requisiciones',
-                'eliminar requisiciones',
-                'ver requisiciones por cuenta',
-                'ver categorias',
-                'crear categorias',
-                'editar categorias',
-                'eliminar categorias',
-            ],
         ];
 
         // Crear roles y asignar permisos

@@ -445,6 +445,11 @@ return [
                     'icon' => 'fa-solid fa-calendar-days',
                     'url' => 'movimientos',
                 ],
+                [
+                    'text' => 'Listado de Viaticos',
+                    'icon' => 'fas fa-suitcase',
+                    'url' => 'viaticos',
+                ],
             ],
         ],
 

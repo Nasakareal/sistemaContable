@@ -26,6 +26,19 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Endpoint JSON para el dashboard (datos reales)
 Route::get('/dashboard.json', [App\Http\Controllers\HomeController::class, 'json'])->name('dashboard.json');
 
+
+// Rutas para Viaticos
+Route::prefix('viaticos')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\ViaticoController::class, 'index'])->middleware('can:ver viaticos')->name('viaticos.index');
+    Route::get('/create', [App\Http\Controllers\ViaticoController::class, 'create'])->middleware('can:crear viaticos')->name('viaticos.create');
+    Route::post('/', [App\Http\Controllers\ViaticoController::class, 'store'])->middleware('can:crear viaticos')->name('viaticos.store');
+    Route::get('/show/{viatico}', [App\Http\Controllers\ViaticoController::class, 'show'])->middleware('can:ver viaticos')->name('viaticos.show');
+    Route::get('/{viatico}/edit', [App\Http\Controllers\ViaticoController::class, 'edit'])->middleware('can:editar viaticos')->name('viaticos.edit');
+    Route::put('/{viatico}', [App\Http\Controllers\ViaticoController::class, 'update'])->middleware('can:editar viaticos')->name('viaticos.update');
+    Route::delete('/{viatico}', [App\Http\Controllers\ViaticoController::class, 'destroy'])->middleware('can:eliminar viaticos')->name('viaticos.destroy');
+});
+
+
 // Rutas para Movimientos
 Route::prefix('movimientos')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\MovimientoController::class, 'index'])->middleware('can:ver movimientos')->name('movimientos.index');
