@@ -9,6 +9,17 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
+
+            <!-- 🔹 Botones de filtro -->
+            <div class="mb-3">
+                <a href="{{ route('movimientos.index', ['revisadas' => 1]) }}" class="btn btn-success btn-sm">
+                    Ver revisadas
+                </a>
+                <a href="{{ route('movimientos.index') }}" class="btn btn-secondary btn-sm">
+                    Ver no revisadas
+                </a>
+            </div>
+
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     <h3 class="card-title">Movimientos</h3>
@@ -17,53 +28,77 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="movimientos" class="table table-striped table-bordered table-hover table-sm nowrap">
-
-                        <thead>
-                            <tr>
-                                <th><center>#</center></th>
-                                <th><center>Tipo</center></th>
-                                <th><center>Referencia</center></th>
-                                <th><center>Descripción</center></th>
-                                <th><center>Fecha</center></th>
-                                <th><center>Monto</center></th>
-                                <th><center>Status</center></th>
-                                <th><center>Origen</center></th>
-                                <th><center>Cuenta</center></th>
-                                <th><center>Acciones</center></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($movimientos as $index => $mov)
+                            <thead>
                                 <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ ucfirst($mov->tipo) }}</td>
-                                    <td>{{ $mov->referencia }}</td>
-                                    <td>{{ $mov->descripcion }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($mov->fecha)->format('d-m-Y') }}</td>
-                                    <td>${{ number_format($mov->monto, 2) }}</td>
-                                    <td>{{ ucfirst($mov->status) }}</td>
-                                    <td>{{ $mov->origen }}</td>
-                                    <td>{{ $mov->cuenta ?? '-' }}</td>
-                                    <td style="text-align: center">
-                                        <a href="{{ route('movimientos.show', $mov->id) }}" class="btn btn-info btn-sm">
-                                            <i class="fa-regular fa-eye"></i> Ver
-                                        </a>
-                                        {{-- Futuro botón para notificación --}}
-                                        {{-- <button class="btn btn-warning btn-sm">Notificar</button> --}}
-                                    </td>
+                                    <th><center>#</center></th>
+                                    <th><center>Tipo</center></th>
+                                    <th><center>Referencia</center></th>
+                                    <th><center>Descripción</center></th>
+                                    <th><center>Fecha</center></th>
+                                    <th><center>Monto</center></th>
+                                    <th><center>Status</center></th>
+                                    <th><center>Origen</center></th>
+                                    <th><center>Cuenta</center></th>
+                                    <th><center>Revisión</center></th>
+                                    <th><center>Acciones</center></th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($movimientos as $index => $mov)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ ucfirst($mov->tipo) }}</td>
+                                        <td>{{ $mov->referencia }}</td>
+                                        <td>{{ $mov->descripcion }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($mov->fecha)->format('d-m-Y') }}</td>
+                                        <td>${{ number_format($mov->monto, 2) }}</td>
+                                        <td>{{ ucfirst($mov->status) }}</td>
+                                        <td>{{ $mov->origen }}</td>
+                                        <td>{{ $mov->cuenta ?? '-' }}</td>
+                                        <td>
+                                            @if(isset($mov->bloqueada) && $mov->bloqueada)
+                                                <span class="badge bg-success">Revisada</span>
+                                            @else
+                                                <span class="badge bg-warning text-dark">No revisada</span>
+                                            @endif
+                                        </td>
+                                        <td style="text-align: center">
+                                            <a href="{{ route('movimientos.show', $mov->id) }}" class="btn btn-info btn-sm">
+                                                <i class="fa-regular fa-eye"></i> Ver
+                                            </a>
+                                            {{-- Botones futuros --}}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
             </div>
+
         </div>
     </div>
 @stop
 
+
 @section('css')
     <style>
+
+        table td {
+            white-space: normal !important;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+        /* Limita el ancho de ciertas columnas */
+        td:nth-child(3), td:nth-child(4) {
+            max-width: 200px;
+        }
+
         .table th, .table td {
             text-align: center;
             vertical-align: middle;

@@ -11,7 +11,10 @@ class MovimientoController extends Controller
 {
     public function index()
     {
-        // Requisiciones desde sistemaInventarios
+        // Obtener el valor del filtro (revisadas = 1 para mostrar bloqueadas)
+        $soloRevisadas = request('revisadas') === '1';
+
+        // Requisiciones desde sistemaInventarios, incluyendo el campo 'bloqueada'
         $requisiciones = DB::connection('inventarios')
             ->table('requisiciones')
             ->select(
@@ -23,16 +26,22 @@ class MovimientoController extends Controller
                 'requisiciones.monto',
                 'requisiciones.status_pago as status',
                 DB::raw("'sistemaInventarios' as origen"),
-                'requisiciones.cuenta_bancaria_id'
+                'requisiciones.cuenta_bancaria_id',
+                'requisiciones.bloqueada'
             )
             ->get();
 
         // Traer las cuentas desde sistemaContable
         $cuentas = DB::table('cuenta_bancarias')->select('id', 'nombre')->get()->keyBy('id');
 
-        // Añadir el nombre de cuenta a cada requisición manualmente
+        // Añadir el nombre de cuenta a cada requisición
         foreach ($requisiciones as $r) {
             $r->cuenta = $cuentas[$r->cuenta_bancaria_id]->nombre ?? 'Sin cuenta';
+        }
+
+        // Aplicar el filtro si se solicitó ver solo las revisadas (bloqueadas)
+        if ($soloRevisadas) {
+            $requisiciones = $requisiciones->filter(fn($r) => $r->bloqueada == 1);
         }
 
         // Nominas aún vacías

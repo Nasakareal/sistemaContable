@@ -3,22 +3,6 @@
   "WorkspaceRootPath": "C:\\wamp64\\www\\sistemaContable\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\PartidaController.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\Http\\Controllers\\PartidaController.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\resources\\views\\viaticos\\create.blade.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:resources\\views\\viaticos\\create.blade.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\app\\Models\\Viatico.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\Models\\Viatico.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\ViaticoController.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:app\\Http\\Controllers\\ViaticoController.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\wamp64\\www\\sistemaContable\\routes\\web.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:routes\\web.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
     }
@@ -35,66 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "PartidaController.php",
-              "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\PartidaController.php",
-              "RelativeDocumentMoniker": "app\\Http\\Controllers\\PartidaController.php",
-              "ToolTip": "C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\PartidaController.php",
-              "RelativeToolTip": "app\\Http\\Controllers\\PartidaController.php",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAwwEIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
-              "WhenOpened": "2025-06-13T22:00:42.217Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Viatico.php",
-              "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\app\\Models\\Viatico.php",
-              "RelativeDocumentMoniker": "app\\Models\\Viatico.php",
-              "ToolTip": "C:\\wamp64\\www\\sistemaContable\\app\\Models\\Viatico.php",
-              "RelativeToolTip": "app\\Models\\Viatico.php",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAwwDMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
-              "WhenOpened": "2025-06-13T21:59:45.609Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "web.php",
               "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\routes\\web.php",
               "RelativeDocumentMoniker": "routes\\web.php",
               "ToolTip": "C:\\wamp64\\www\\sistemaContable\\routes\\web.php",
               "RelativeToolTip": "routes\\web.php",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACIAAACSAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
               "WhenOpened": "2025-06-13T21:39:47.279Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ViaticoController.php",
-              "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\ViaticoController.php",
-              "RelativeDocumentMoniker": "app\\Http\\Controllers\\ViaticoController.php",
-              "ToolTip": "C:\\wamp64\\www\\sistemaContable\\app\\Http\\Controllers\\ViaticoController.php",
-              "RelativeToolTip": "app\\Http\\Controllers\\ViaticoController.php",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAwwHkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
-              "WhenOpened": "2025-06-13T21:28:50.774Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "create.blade.php",
-              "DocumentMoniker": "C:\\wamp64\\www\\sistemaContable\\resources\\views\\viaticos\\create.blade.php",
-              "RelativeDocumentMoniker": "resources\\views\\viaticos\\create.blade.php",
-              "ToolTip": "C:\\wamp64\\www\\sistemaContable\\resources\\views\\viaticos\\create.blade.php",
-              "RelativeToolTip": "resources\\views\\viaticos\\create.blade.php",
-              "ViewState": "AgIAADsBAAAAAAAAAAAwwGMBAABQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
-              "WhenOpened": "2025-06-13T21:28:27.289Z",
               "EditorCaption": ""
             }
           ]
