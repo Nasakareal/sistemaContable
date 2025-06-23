@@ -74,7 +74,6 @@ class ViaticoController extends Controller
         return redirect()->route('viaticos.index')->with('success', 'Viático registrado correctamente.');
     }
 
-
     public function show(Viatico $viatico)
     {
         $viatico->load(['fondo', 'cuentaBancaria', 'empleado']);
@@ -165,7 +164,10 @@ class ViaticoController extends Controller
 
     public function getPartidas($id)
     {
-        $partidas = Partida::where('capitulo_id', $id)->select('id', 'nombre')->get();
+        $partidas = Partida::where('capitulo_id', $id)
+            ->select('id', 'nombre', 'descripcion')
+            ->get();
+
         return response()->json($partidas);
     }
 }

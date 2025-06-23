@@ -6,8 +6,8 @@
     "\\app\\Http\\Controllers",
     "\\resources",
     "\\resources\\views",
-    "\\resources\\views\\movimientos"
+    "\\resources\\views\\viaticos"
   ],
-  "SelectedNode": "\\resources\\views\\movimientos\\index.blade.php",
+  "SelectedNode": "\\resources\\views\\viaticos\\create.blade.php",
   "PreviewInSolutionExplorer": false
 }

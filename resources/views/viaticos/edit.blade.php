@@ -106,45 +106,42 @@
                         </div>
                     </div>
 
-                    <!-- Observaciones -->
-                    <div class="form-group">
-                        <label for="observaciones">Observaciones</label>
-                        <textarea name="observaciones" class="form-control" rows="3">{{ old('observaciones', $viatico->observaciones) }}</textarea>
-                    </div>
-
-                    <hr>
-
                     <!-- Capítulo -->
-                    <div class="form-group">
-                        <label for="capitulo_id">Capítulo</label>
-                        <select name="capitulo_id" class="form-control" disabled>
-                            <option value="">Seleccione un capítulo</option>
-                            @foreach ($capitulos as $cap)
-                                <option value="{{ $cap->id }}" {{ $cap->id == $capituloSeleccionado ? 'selected' : '' }}>
-                                    {{ $cap->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="capitulo_id">Capítulo</label>
+                                <select id="capitulo_id" name="capitulo_id" class="form-control" required>
+                                    <option value="">Seleccione un capítulo</option>
+                                    @foreach ($capitulos as $capitulo)
+                                        <option value="{{ $capitulo->id }}"
+                                            {{ $capituloSeleccionado == $capitulo->id ? 'selected' : '' }}>
+                                            {{ $capitulo->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Partidas -->
-                    @foreach ($viatico->partidas as $i => $partida)
+                    @php
+                        $oldPartidas = old('partidas', $viatico->partidas->map(function ($partida) {
+                            return ['id' => $partida->id, 'monto' => $partida->pivot->monto];
+                        })->toArray());
+                    @endphp
 
-                        @php
-                            $pivot = $viatico->partidas->firstWhere('id', $partida->id);
-                            $monto = old("partidas.$i.monto", $pivot ? $pivot->pivot->monto : '');
-                        @endphp
-
+                    @for ($i = 0; $i < 2; $i++)
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Partida {{ $i + 1 }}</label>
-                                    <select name="partidas[{{ $i }}][id]" class="form-control">
+                                    <select name="partidas[{{ $i }}][id]" class="form-control partida-select">
                                         <option value="">Seleccione una partida</option>
                                         @foreach ($partidas as $p)
                                             <option value="{{ $p->id }}"
-                                                {{ old("partidas.$i.id", $pivot?->id) == $p->id ? 'selected' : '' }}>
-                                                {{ $p->nombre }}
+                                                {{ isset($oldPartidas[$i]['id']) && $oldPartidas[$i]['id'] == $p->id ? 'selected' : '' }}>
+                                                {{ $p->nombre }} - {{ $p->descripcion }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -154,12 +151,24 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Monto</label>
-                                    <input type="number" step="0.01" name="partidas[{{ $i }}][monto]"
-                                           class="form-control" value="{{ $monto }}">
+                                    <input type="number" name="partidas[{{ $i }}][monto]" step="0.01" class="form-control"
+                                           value="{{ $oldPartidas[$i]['monto'] ?? '' }}">
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    @endfor
+
+
+
+                    <!-- Observaciones -->
+                    <div class="form-group">
+                        <label for="observaciones">Observaciones</label>
+                        <textarea name="observaciones" class="form-control" rows="3">{{ old('observaciones', $viatico->observaciones) }}</textarea>
+                    </div>
+
+                    <hr>
+
+                    
 
                     <hr>
 
