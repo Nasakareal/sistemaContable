@@ -36,6 +36,15 @@ Route::prefix('viaticos')->middleware('auth')->group(function () {
     Route::get('/{viatico}/edit', [App\Http\Controllers\ViaticoController::class, 'edit'])->middleware('can:editar viaticos')->name('viaticos.edit');
     Route::put('/{viatico}', [App\Http\Controllers\ViaticoController::class, 'update'])->middleware('can:editar viaticos')->name('viaticos.update');
     Route::delete('/{viatico}', [App\Http\Controllers\ViaticoController::class, 'destroy'])->middleware('can:eliminar viaticos')->name('viaticos.destroy');
+
+    // Rutas para comprobaciones
+    Route::get('/{viatico}/comprobaciones', [App\Http\Controllers\ViaticosComprobacionController::class, 'index'])->name('comprobaciones.index')->middleware('can:ver viaticos');
+    Route::get('/{viatico}/comprobaciones/create', [App\Http\Controllers\ViaticosComprobacionController::class, 'create'])->name('comprobaciones.create')->middleware('can:crear viaticos');
+    Route::post('/{viatico}/comprobaciones', [App\Http\Controllers\ViaticosComprobacionController::class, 'store'])->name('comprobaciones.store')->middleware('can:crear viaticos');
+    Route::get('/{viatico}/comprobaciones/{comprobacion}', [App\Http\Controllers\ViaticosComprobacionController::class, 'show'])->name('comprobaciones.show')->middleware('can:ver viaticos');
+    Route::get('/{viatico}/comprobaciones/{comprobacion}/edit', [App\Http\Controllers\ViaticosComprobacionController::class, 'edit'])->name('comprobaciones.edit')->middleware('can:editar viaticos');
+    Route::put('/{viatico}/comprobaciones/{comprobacion}', [App\Http\Controllers\ViaticosComprobacionController::class, 'update'])->name('comprobaciones.update')->middleware('can:editar viaticos');
+    Route::delete('/{viatico}/comprobaciones/{comprobacion}', [App\Http\Controllers\ViaticosComprobacionController::class, 'destroy'])->name('comprobaciones.destroy')->middleware('can:eliminar viaticos');
 });
 
 

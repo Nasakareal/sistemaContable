@@ -64,6 +64,9 @@
                                         <a href="{{ route('viaticos.edit', $v->id) }}" class="btn btn-success btn-sm">
                                             <i class="fa-solid fa-pencil"></i> Editar
                                         </a>
+                                        <a href="{{ route('comprobaciones.index', $v->id) }}" class="btn btn-warning btn-sm">
+                                            <i class="fa-solid fa-file-invoice-dollar"></i> Comprobaciones
+                                        </a>
                                         <form action="{{ route('viaticos.destroy', $v->id) }}" method="POST" style="display: inline-block;">
                                             @csrf
                                             @method('DELETE')

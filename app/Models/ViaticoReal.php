@@ -47,4 +47,8 @@ class ViaticoReal extends Model
                     ->withTimestamps();
     }
 
+    public function comprobaciones()
+    {
+        return $this->hasMany(ViaticosComprobacion::class, 'viatico_id');
+    }
 }

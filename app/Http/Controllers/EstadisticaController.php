@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\MensualExport;
 use App\Exports\IngresosVsEgresosExport;
+use App\Exports\ViaticosExport;
 use Illuminate\Support\Facades\DB;
+use App\Models\ViaticoReal;
 
 class EstadisticaController extends Controller
 {
@@ -27,6 +29,11 @@ class EstadisticaController extends Controller
                 'titulo' => 'Auxiliar del Ejercicio del Gasto',
                 'ver' => route('estadisticas.ver', 'ingresos-vs-egresos'),
                 'descargar' => route('estadisticas.descargar', 'ingresos-vs-egresos')
+            ],
+            [
+                'titulo' => 'Listado General de Viáticos',
+                'ver' => route('estadisticas.ver', 'viaticos'),
+                'descargar' => route('estadisticas.descargar', 'viaticos')
             ],
         ];
 
@@ -137,6 +144,14 @@ class EstadisticaController extends Controller
                     'titulo', 'datos', 'ministraciones', 'rendimientos'
                 ));
 
+            case 'viaticos':
+                $titulo = 'Listado General de Viáticos';
+
+                $viaticos = \App\Models\ViaticoReal::with(['empleado', 'fondo', 'cuentaBancaria'])
+                    ->orderByDesc('fecha_entrega')
+                    ->get();
+
+                return view('admin.settings.estadisticas.vistas.viaticos', compact('titulo', 'viaticos'));
 
             default:
                 abort(404, 'Vista de estadística no disponible');
@@ -184,64 +199,68 @@ class EstadisticaController extends Controller
                 return new MensualExport($datos);
 
             case 'ingresos-vs-egresos':
-    $filtroMes = request('mes');
+                $filtroMes = request('mes');
 
-    $proyecciones = DB::table('proyecciones')
-        ->selectRaw('month, SUM(monto) as total')
-        ->where('year', date('Y'))
-        ->when($filtroMes, fn($q) => $q->where('month', $filtroMes))
-        ->groupBy('month')
-        ->pluck('total', 'month');
+                $proyecciones = DB::table('proyecciones')
+                    ->selectRaw('month, SUM(monto) as total')
+                    ->where('year', date('Y'))
+                    ->when($filtroMes, fn($q) => $q->where('month', $filtroMes))
+                    ->groupBy('month')
+                    ->pluck('total', 'month');
 
-    $ingresos = DB::table('ministraciones')
-        ->selectRaw('MONTH(fecha) as mes, SUM(importe) as total')
-        ->when($filtroMes, fn($q) => $q->whereMonth('fecha', $filtroMes))
-        ->whereYear('fecha', date('Y'))
-        ->groupByRaw('MONTH(fecha)')
-        ->pluck('total', 'mes');
+                $ingresos = DB::table('ministraciones')
+                    ->selectRaw('MONTH(fecha) as mes, SUM(importe) as total')
+                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha', $filtroMes))
+                    ->whereYear('fecha', date('Y'))
+                    ->groupByRaw('MONTH(fecha)')
+                    ->pluck('total', 'mes');
 
-    $ministraciones = DB::table('ministraciones')
-        ->whereYear('fecha', date('Y'))
-        ->when($filtroMes, fn($q) => $q->whereMonth('fecha', $filtroMes))
-        ->get();
+                $ministraciones = DB::table('ministraciones')
+                    ->whereYear('fecha', date('Y'))
+                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha', $filtroMes))
+                    ->get();
 
-    $egresos = DB::connection('inventarios')
-        ->table('requisiciones')
-        ->selectRaw('MONTH(fecha_requisicion) as mes, SUM(monto) as total')
-        ->where('status_requisicion', 'Entregado')
-        ->when($filtroMes, fn($q) => $q->whereMonth('fecha_requisicion', $filtroMes))
-        ->whereYear('fecha_requisicion', date('Y'))
-        ->groupByRaw('MONTH(fecha_requisicion)')
-        ->pluck('total', 'mes');
+                $egresos = DB::connection('inventarios')
+                    ->table('requisiciones')
+                    ->selectRaw('MONTH(fecha_requisicion) as mes, SUM(monto) as total')
+                    ->where('status_requisicion', 'Entregado')
+                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha_requisicion', $filtroMes))
+                    ->whereYear('fecha_requisicion', date('Y'))
+                    ->groupByRaw('MONTH(fecha_requisicion)')
+                    ->pluck('total', 'mes');
 
-    $datos = [];
-    for ($mes = 1; $mes <= 12; $mes++) {
-        if ($filtroMes && $mes != $filtroMes) continue;
+                $datos = [];
+                for ($mes = 1; $mes <= 12; $mes++) {
+                    if ($filtroMes && $mes != $filtroMes) continue;
 
-        $proyectado = round($proyecciones[$mes] ?? 0, 2);
-        $recaudado = round($ingresos[$mes] ?? 0, 2);
-        $egresado = round($egresos[$mes] ?? 0, 2);
-        $diferencia = $recaudado - $egresado;
+                    $proyectado = round($proyecciones[$mes] ?? 0, 2);
+                    $recaudado = round($ingresos[$mes] ?? 0, 2);
+                    $egresado = round($egresos[$mes] ?? 0, 2);
+                    $diferencia = $recaudado - $egresado;
 
-        $datos[] = [
-            'mes' => ucfirst(\Carbon\Carbon::create()->month($mes)->locale('es')->monthName),
-            'proyectado' => $proyectado,
-            'recaudado' => $recaudado,
-            'egresado' => $egresado,
-            'diferencia' => $diferencia,
-            'solo_ministraciones' => $recaudado,
-            'solo_requisiciones' => $egresado,
-        ];
-    }
+                    $datos[] = [
+                        'mes' => ucfirst(\Carbon\Carbon::create()->month($mes)->locale('es')->monthName),
+                        'proyectado' => $proyectado,
+                        'recaudado' => $recaudado,
+                        'egresado' => $egresado,
+                        'diferencia' => $diferencia,
+                        'solo_ministraciones' => $recaudado,
+                        'solo_requisiciones' => $egresado,
+                    ];
+                }
 
-    $rendimientos = 0;
+                $rendimientos = 0;
 
-    return new IngresosVsEgresosExport($datos, $ministraciones, $rendimientos);
+                return new IngresosVsEgresosExport($datos, $ministraciones, $rendimientos);
+
+            case 'viaticos':
+                $viaticos = \App\Models\ViaticoReal::with(['empleado', 'fondo', 'cuentaBancaria', 'comprobaciones'])->orderByDesc('fecha_entrega')->get();
+
+                return Excel::download(new ViaticosExport($viaticos), 'viaticos.xlsx');
+
 
             default:
                 abort(404, 'Descarga no disponible');
         }
     }
-
-
 }
