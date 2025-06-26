@@ -30,7 +30,7 @@
                         <tr>
                             <th>#</th>
                             <th>Cuenta contable</th>
-                            <th>Descripción</th>
+                            <th>Partida</th>
                             <th>Monto</th>
                             <th>Tipo</th>
                             <th>Acciones</th>
@@ -41,7 +41,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $comp->cuenta_contable }}</td>
-                                <td>{{ $comp->descripcion }}</td>
+                                <td>{{ $comp->partidas->pluck('descripcion')->join(', ') }}</td>
                                 <td>${{ number_format($comp->monto, 2) }}</td>
                                 <td>
                                     <span class="badge 

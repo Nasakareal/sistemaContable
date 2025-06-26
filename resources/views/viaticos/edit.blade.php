@@ -106,69 +106,11 @@
                         </div>
                     </div>
 
-                    <!-- Capítulo -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="capitulo_id">Capítulo</label>
-                                <select id="capitulo_id" name="capitulo_id" class="form-control" required>
-                                    <option value="">Seleccione un capítulo</option>
-                                    @foreach ($capitulos as $capitulo)
-                                        <option value="{{ $capitulo->id }}"
-                                            {{ $capituloSeleccionado == $capitulo->id ? 'selected' : '' }}>
-                                            {{ $capitulo->nombre }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Partidas -->
-                    @php
-                        $oldPartidas = old('partidas', $viatico->partidas->map(function ($partida) {
-                            return ['id' => $partida->id, 'monto' => $partida->pivot->monto];
-                        })->toArray());
-                    @endphp
-
-                    @for ($i = 0; $i < 2; $i++)
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Partida {{ $i + 1 }}</label>
-                                    <select name="partidas[{{ $i }}][id]" class="form-control partida-select">
-                                        <option value="">Seleccione una partida</option>
-                                        @foreach ($partidas as $p)
-                                            <option value="{{ $p->id }}"
-                                                {{ isset($oldPartidas[$i]['id']) && $oldPartidas[$i]['id'] == $p->id ? 'selected' : '' }}>
-                                                {{ $p->nombre }} - {{ $p->descripcion }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Monto</label>
-                                    <input type="number" name="partidas[{{ $i }}][monto]" step="0.01" class="form-control"
-                                           value="{{ $oldPartidas[$i]['monto'] ?? '' }}">
-                                </div>
-                            </div>
-                        </div>
-                    @endfor
-
-
-
                     <!-- Observaciones -->
                     <div class="form-group">
                         <label for="observaciones">Observaciones</label>
                         <textarea name="observaciones" class="form-control" rows="3">{{ old('observaciones', $viatico->observaciones) }}</textarea>
                     </div>
-
-                    <hr>
-
-                    
 
                     <hr>
 
@@ -184,7 +126,6 @@
     </div>
 </div>
 @stop
-
 
 
 @section('css')
@@ -299,35 +240,6 @@
             confirmButtonText: 'Aceptar'
         });
     @endif
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const capituloSelect = document.getElementById('capitulo_id');
-        const partidaSelects = document.querySelectorAll('.partida-select');
-
-        capituloSelect.addEventListener('change', function () {
-            const capituloId = this.value;
-
-            partidaSelects.forEach(select => {
-                select.innerHTML = '<option value="">Cargando partidas...</option>';
-            });
-
-            fetch("{{ url('/partidas/capitulo') }}/" + capituloId)
-                .then(response => response.json())
-                .then(data => {
-                    partidaSelects.forEach(select => {
-                        select.innerHTML = '<option value="">Seleccione una partida</option>';
-                        data.forEach(p => {
-                            const option = document.createElement('option');
-                            option.value = p.id;
-                            option.textContent = `${p.nombre} - ${p.descripcion}`;
-                            select.appendChild(option);
-                        });
-                    });
-                });
-        });
-    });
 </script>
 @stop
 

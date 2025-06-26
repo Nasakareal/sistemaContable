@@ -2,15 +2,13 @@
   "ExpandedNodes": [
     "",
     "\\app",
-    "\\app\\Models",
+    "\\app\\Http",
+    "\\app\\Http\\Controllers",
     "\\resources",
     "\\resources\\views",
-    "\\resources\\views\\admin",
-    "\\resources\\views\\admin\\settings",
-    "\\resources\\views\\admin\\settings\\estadisticas",
-    "\\resources\\views\\admin\\settings\\estadisticas\\vistas",
     "\\resources\\views\\viaticos",
     "\\resources\\views\\viaticos\\comprobaciones"
   ],
+  "SelectedNode": "\\resources\\views\\viaticos\\comprobaciones\\edit.blade.php",
   "PreviewInSolutionExplorer": false
 }

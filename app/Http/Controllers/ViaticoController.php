@@ -23,10 +23,8 @@ class ViaticoController extends Controller
         $fondos   = Fondo::all();
         $cuentas  = CuentaBancaria::all();
         $empleados = Empleado::on('humanos')->get();
-        $partidas = Partida::all();
-        $capitulos  = Capitulo::all();
 
-        return view('viaticos.create', compact('fondos', 'cuentas', 'empleados', 'partidas', 'capitulos'));
+        return view('viaticos.create', compact('fondos', 'cuentas', 'empleados'));
     }
 
     public function store(Request $request)
@@ -39,21 +37,9 @@ class ViaticoController extends Controller
             'importe_total'       => 'required|numeric|min:0',
             'estatus'             => 'required|in:PENDIENTE,COMPROBADO,PARCIAL,CANCELADO',
             'observaciones'       => 'nullable|string',
-            'partidas.*.id'       => 'nullable|exists:partidas,id',
-            'partidas.*.monto'    => 'nullable|numeric|min:0',
         ]);
 
-        $sumaPartidas = collect($request->input('partidas', []))
-            ->pluck('monto')
-            ->filter()
-            ->sum();
-
-        if ($sumaPartidas > $request->importe_total) {
-            return back()->withErrors(['partidas' => 'La suma de las partidas excede el importe total del viático.'])
-                         ->withInput();
-        }
-
-        $cuenta = CuentaBancaria::find($request->cuenta_bancaria_id);
+        $cuenta = CuentaBancaria::findOrFail($request->cuenta_bancaria_id);
 
         if ($request->importe_total > $cuenta->saldo) {
             return back()->withErrors(['importe_total' => 'El saldo de la cuenta es insuficiente para cubrir este viático.'])
@@ -61,13 +47,6 @@ class ViaticoController extends Controller
         }
 
         $viatico = Viatico::create($request->all());
-
-        foreach ($request->input('partidas', []) as $partida) {
-            if (!empty($partida['id']) && $partida['monto'] > 0) {
-                $viatico->partidas()->attach($partida['id'], ['monto' => $partida['monto']]);
-            }
-        }
-
         $cuenta->saldo -= $request->importe_total;
         $cuenta->save();
 
@@ -82,20 +61,11 @@ class ViaticoController extends Controller
 
     public function edit(Viatico $viatico)
     {
-        $viatico->load('partidas');
-
         $fondos    = Fondo::all();
         $cuentas   = CuentaBancaria::all();
         $empleados = Empleado::on('humanos')->get();
-        $capitulos = Capitulo::all();
 
-        $capituloSeleccionado = optional($viatico->partidas->first())->capitulo_id;
-
-        $partidas = $capituloSeleccionado
-            ? Partida::where('capitulo_id', $capituloSeleccionado)->get()
-            : collect();
-
-        return view('viaticos.edit', compact('viatico', 'fondos', 'cuentas', 'empleados', 'capitulos', 'partidas', 'capituloSeleccionado'));
+        return view('viaticos.edit', compact('viatico', 'fondos', 'cuentas', 'empleados'));
     }
 
 
@@ -109,46 +79,41 @@ class ViaticoController extends Controller
             'importe_total'       => 'required|numeric|min:0',
             'estatus'             => 'required|in:PENDIENTE,COMPROBADO,PARCIAL,CANCELADO',
             'observaciones'       => 'nullable|string',
-            'partidas.*.id'       => 'nullable|exists:partidas,id',
-            'partidas.*.monto'    => 'nullable|numeric|min:0',
         ]);
-
-        $sumaPartidas = collect($request->input('partidas', []))->pluck('monto')->filter()->sum();
-
-        if ($sumaPartidas > $request->importe_total) {
-            return back()->withErrors(['partidas' => 'La suma de las partidas excede el importe total del viático.'])
-                         ->withInput();
-        }
 
         // Ajustar saldo si cambió cuenta o importe
         if ($viatico->cuenta_bancaria_id != $request->cuenta_bancaria_id) {
-            $cuentaAnterior = CuentaBancaria::find($viatico->cuenta_bancaria_id);
+            // Reembolsar a la cuenta anterior
+            $cuentaAnterior = CuentaBancaria::findOrFail($viatico->cuenta_bancaria_id);
             $cuentaAnterior->saldo += $viatico->importe_total;
             $cuentaAnterior->save();
 
-            $cuentaNueva = CuentaBancaria::find($request->cuenta_bancaria_id);
+            // Cobrar de la nueva cuenta
+            $cuentaNueva = CuentaBancaria::findOrFail($request->cuenta_bancaria_id);
+            if ($request->importe_total > $cuentaNueva->saldo) {
+                return back()->withErrors(['importe_total' => 'Saldo insuficiente en la cuenta seleccionada.'])->withInput();
+            }
             $cuentaNueva->saldo -= $request->importe_total;
             $cuentaNueva->save();
-        } else {
-            $cuenta = CuentaBancaria::find($request->cuenta_bancaria_id);
-            $cuenta->saldo += $viatico->importe_total;
-            $cuenta->saldo -= $request->importe_total;
+
+        } elseif ($viatico->importe_total != $request->importe_total) {
+            // Si solo cambió el importe, ajustar saldo
+            $cuenta = CuentaBancaria::findOrFail($viatico->cuenta_bancaria_id);
+            $diferencia = $request->importe_total - $viatico->importe_total;
+
+            if ($diferencia > 0 && $diferencia > $cuenta->saldo) {
+                return back()->withErrors(['importe_total' => 'Saldo insuficiente para aumentar el importe.'])->withInput();
+            }
+
+            $cuenta->saldo -= $diferencia;
             $cuenta->save();
         }
 
+        // Actualizar el viático
         $viatico->update($request->all());
-
-        // Actualizar partidas (detach y attach nuevas)
-        $viatico->partidas()->detach();
-        foreach ($request->input('partidas', []) as $partida) {
-            if (!empty($partida['id']) && $partida['monto'] > 0) {
-                $viatico->partidas()->attach($partida['id'], ['monto' => $partida['monto']]);
-            }
-        }
 
         return redirect()->route('viaticos.index')->with('success', 'Viático actualizado correctamente.');
     }
-
 
     public function destroy(Viatico $viatico)
     {

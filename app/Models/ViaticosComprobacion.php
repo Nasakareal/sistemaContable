@@ -14,7 +14,6 @@ class ViaticosComprobacion extends Model
     protected $fillable = [
         'viatico_id',
         'cuenta_contable',
-        'descripcion',
         'monto',
         'tipo',
     ];
@@ -22,5 +21,12 @@ class ViaticosComprobacion extends Model
     public function viatico()
     {
         return $this->belongsTo(Viatico::class);
+    }
+
+    public function partidas()
+    {
+        return $this->belongsToMany(Partida::class, 'partida_viatico', 'viaticos_comprobacion_id', 'partida_id')
+                    ->withPivot('monto')
+                    ->withTimestamps();
     }
 }

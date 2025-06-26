@@ -231,57 +231,6 @@
                                 </div>
                             </div>
                         </div>
-
-                         <!-- Partidas -->
-                        <div class="row">
-                            <!-- Capítulo -->
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="capitulo_id">Capítulo</label>
-                                    <select id="capitulo_id" class="form-control" required>
-                                        <option value="">Seleccione un capítulo</option>
-                                        @foreach ($capitulos as $capitulo)
-                                            <option value="{{ $capitulo->id }}">{{ $capitulo->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- Partida 1 -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Partida 1</label>
-                                    <select name="partidas[0][id]" class="form-control partida-select" required></select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Monto</label>
-                                    <input type="number" name="partidas[0][monto]" class="form-control" step="0.01" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- Partida 2 -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Partida 2</label>
-                                    <select name="partidas[1][id]" class="form-control partida-select"></select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Monto</label>
-                                    <input type="number" name="partidas[1][monto]" class="form-control" step="0.01">
-                                </div>
-                            </div>
-                        </div>
-
-
-
                         <!-- Observaciones -->
                         <div class="row">
                             <div class="col-md-12">
@@ -331,35 +280,6 @@
             confirmButtonText: 'Aceptar'
         });
     @endif
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const capituloSelect = document.getElementById('capitulo_id');
-        const partidaSelects = document.querySelectorAll('.partida-select');
-
-        capituloSelect.addEventListener('change', function () {
-            const capituloId = this.value;
-
-            partidaSelects.forEach(select => {
-                select.innerHTML = '<option value="">Cargando partidas...</option>';
-            });
-
-            fetch("{{ url('/partidas/capitulo') }}/" + capituloId)
-                .then(response => response.json())
-                .then(data => {
-                    partidaSelects.forEach(select => {
-                        select.innerHTML = '<option value="">Seleccione una partida</option>';
-                        data.forEach(p => {
-                            const option = document.createElement('option');
-                            option.value = p.id;
-                            option.textContent = `${p.nombre} - ${p.descripcion}`;
-                            select.appendChild(option);
-                        });
-                    });
-                });
-        });
-    });
 </script>
 @stop
 

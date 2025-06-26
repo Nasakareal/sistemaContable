@@ -40,13 +40,6 @@ class ViaticoReal extends Model
         return $this->belongsTo(CuentaBancaria::class);
     }
 
-    public function partidas()
-    {
-        return $this->belongsToMany(Partida::class, 'partida_viatico', 'viatico_id', 'partida_id')
-                    ->withPivot('monto')
-                    ->withTimestamps();
-    }
-
     public function comprobaciones()
     {
         return $this->hasMany(ViaticosComprobacion::class, 'viatico_id');
