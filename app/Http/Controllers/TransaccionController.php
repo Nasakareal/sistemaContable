@@ -18,7 +18,7 @@ class TransaccionController extends Controller
         $transacciones = Transaccion::with([
             'cuentaBancaria',
             'capitulo',
-            'partida',
+            'partidas',
             'unidadResponsable',
             'area',
             'solicitudDev'
@@ -48,11 +48,19 @@ class TransaccionController extends Controller
             'descripcion' => 'nullable|string',
             'cuenta_bancaria_id' => 'required|exists:cuenta_bancarias,id',
             'capitulo_id' => 'nullable|exists:capitulos,id',
-            'partida_id' => 'nullable|exists:partidas,id',
+            'partidas' => 'required|array|min:1',
+            'partidas.*.id' => 'required|exists:partidas,id',
+            'partidas.*.monto' => 'required|numeric|min:0',
             'unidad_responsable_id' => 'nullable|exists:unidad_responsables,id',
             'area_id' => 'nullable|exists:areas,id',
             'solicitud_dev_id' => 'nullable|exists:solicitud_devs,id',
         ]);
+
+        // ✅ Validar que la suma de las partidas coincida con el monto total
+        $totalPartidas = collect($request->partidas)->sum('monto');
+        if ($totalPartidas != $request->monto) {
+            return redirect()->back()->withInput()->with('error', 'La suma de los montos de las partidas (' . number_format($totalPartidas, 2) . ') no coincide con el monto total (' . number_format($request->monto, 2) . ').');
+        }
 
         try {
             \DB::transaction(function () use ($request) {
@@ -63,8 +71,28 @@ class TransaccionController extends Controller
                     }
                 }
 
-                $transaccion = Transaccion::create($request->all());
+                // Crear la transacción SIN partida_id
+                $transaccion = Transaccion::create($request->only([
+                    'tipo',
+                    'monto',
+                    'fecha',
+                    'descripcion',
+                    'cuenta_bancaria_id',
+                    'capitulo_id',
+                    'unidad_responsable_id',
+                    'area_id',
+                    'solicitud_dev_id',
+                ]));
 
+                // Asociar las partidas con sus montos
+                $partidasData = [];
+                foreach ($request->partidas as $p) {
+                    $partidasData[$p['id']] = ['monto' => $p['monto']];
+                }
+
+                $transaccion->partidas()->attach($partidasData);
+
+                // Actualizar saldo de cuenta
                 $cuenta = CuentaBancaria::find($request->cuenta_bancaria_id);
                 if ($cuenta) {
                     if ($request->tipo === 'ingreso') {
@@ -83,6 +111,7 @@ class TransaccionController extends Controller
                          ->with('success', 'Transacción registrada correctamente.');
     }
 
+
     public function show(Transaccion $transaccion)
     {
         return view('transacciones.show', compact('transaccion'));
@@ -90,14 +119,24 @@ class TransaccionController extends Controller
 
     public function edit(Transaccion $transaccion)
     {
-        $cuentas = CuentaBancaria::all();
-        $capitulos = Capitulo::all();
-        $partidas = Partida::all();
-        $unidades = UnidadResponsable::all();
-        $areas = Area::all();
+        $transaccion->load('partidas');
+
+        $cuentas     = CuentaBancaria::all();
+        $capitulos   = Capitulo::all();
+        $partidas    = Partida::all();
+        $unidades    = UnidadResponsable::all();
+        $areas       = Area::all();
         $solicitudes = SolicitudDev::all();
 
-        return view('transacciones.edit', compact('transaccion', 'cuentas', 'capitulos', 'partidas', 'unidades', 'areas', 'solicitudes'));
+        return view('transacciones.edit', compact(
+            'transaccion',
+            'cuentas',
+            'capitulos',
+            'partidas',
+            'unidades',
+            'areas',
+            'solicitudes'
+        ));
     }
 
     public function update(Request $request, Transaccion $transaccion)
@@ -109,17 +148,27 @@ class TransaccionController extends Controller
             'descripcion' => 'nullable|string',
             'cuenta_bancaria_id' => 'required|exists:cuenta_bancarias,id',
             'capitulo_id' => 'nullable|exists:capitulos,id',
-            'partida_id' => 'nullable|exists:partidas,id',
             'unidad_responsable_id' => 'nullable|exists:unidad_responsables,id',
             'area_id' => 'nullable|exists:areas,id',
             'solicitud_dev_id' => 'nullable|exists:solicitud_devs,id',
+
+            'partidas' => 'required|array|min:1',
+            'partidas.*.id' => 'required|exists:partidas,id',
+            'partidas.*.monto' => 'required|numeric|min:0',
         ]);
+
+        // ✅ Validar que la suma de las partidas coincida con el nuevo monto total
+        $totalPartidas = collect($request->partidas)->sum('monto');
+        if ($totalPartidas != $request->monto) {
+            return redirect()->back()->withInput()->with('error', 'La suma de los montos de las partidas (' . number_format($totalPartidas, 2) . ') no coincide con el monto total (' . number_format($request->monto, 2) . ').');
+        }
 
         try {
             \DB::transaction(function () use ($request, $transaccion) {
-                $oldTipo       = $transaccion->tipo;
-                $oldMonto      = $transaccion->monto;
-                $oldCuentaId   = $transaccion->cuenta_bancaria_id;
+                // Revertir saldo anterior
+                $oldTipo     = $transaccion->tipo;
+                $oldMonto    = $transaccion->monto;
+                $oldCuentaId = $transaccion->cuenta_bancaria_id;
 
                 $oldCuenta = CuentaBancaria::find($oldCuentaId);
                 if ($oldCuenta) {
@@ -131,8 +180,28 @@ class TransaccionController extends Controller
                     $oldCuenta->save();
                 }
 
-                $transaccion->update($request->all());
+                // Actualizar transacción (sin partida_id)
+                $transaccion->update($request->only([
+                    'tipo',
+                    'monto',
+                    'fecha',
+                    'descripcion',
+                    'cuenta_bancaria_id',
+                    'capitulo_id',
+                    'unidad_responsable_id',
+                    'area_id',
+                    'solicitud_dev_id',
+                ]));
 
+                // Actualizar partidas asociadas (pivot)
+                $partidasData = [];
+                foreach ($request->partidas as $p) {
+                    $partidasData[$p['id']] = ['monto' => $p['monto']];
+                }
+
+                $transaccion->partidas()->sync($partidasData);
+
+                // Aplicar nuevo saldo
                 $newCuenta = CuentaBancaria::find($transaccion->cuenta_bancaria_id);
                 if ($newCuenta) {
                     if ($transaccion->tipo === 'egreso') {
@@ -152,6 +221,7 @@ class TransaccionController extends Controller
 
         return redirect()->route('transacciones.index')->with('success', 'Transacción actualizada correctamente.');
     }
+
 
     public function destroy(Transaccion $transaccion)
     {

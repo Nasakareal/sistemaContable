@@ -8,6 +8,24 @@
 
 @section('content')
 
+{{-- Filtro de cuenta bancaria --}}
+<form method="GET" class="mb-3">
+    <div class="row">
+        <div class="col-md-6">
+            <label for="cuenta">Filtrar por cuenta bancaria:</label>
+            <select name="cuenta" id="cuenta" class="form-control" onchange="this.form.submit()">
+                <option value="">-- Todas --</option>
+                @foreach($cuentas as $c)
+                    <option value="{{ $c->id }}" {{ request('cuenta') == $c->id ? 'selected' : '' }}>
+                        {{ $c->nombre }} ({{ $c->numero }})
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+</form>
+
+{{-- Tabla resumen tipo informe UTM --}}
 <div class="card card-outline card-primary mb-4">
     <div class="card-body">
         <h5><strong>Análisis de los Ingresos Vs Gastos</strong></h5>
@@ -38,7 +56,10 @@
                     $capitulos_total = array_fill_keys($capitulos, 0);
                     $otro_capitulo_total = 0;
                     $importe_total = 0;
-                    $cuenta = 'BBVA - 01214395865';
+                    $cuentaSeleccionada = $cuentas->firstWhere('id', request('cuenta'));
+                    $cuenta = $cuentaSeleccionada 
+                        ? $cuentaSeleccionada->nombre . ' - ' . $cuentaSeleccionada->numero
+                        : 'Todas las cuentas';
 
                     foreach ($ministraciones as $m) {
                         $importe_total += $m->importe;
@@ -51,7 +72,6 @@
                     }
 
                     $gran_total = $importe_total + $rendimientos;
-                    $cap_sum = array_sum($capitulos_total);
                 @endphp
 
                 <tr>
@@ -82,20 +102,19 @@
     </div>
 </div>
 
-{{-- Gráfico --}}
+{{-- Gráfico de barras --}}
 <div class="card">
-    <div class="card-body" style="height: 400px;"> {{-- altura fija en el contenedor --}}
-        <canvas id="graficaIngresosEgresos"></canvas> {{-- sin height aquí --}}
+    <div class="card-body" style="height: 400px;">
+        <canvas id="graficaIngresosEgresos"></canvas>
     </div>
 </div>
 
-{{-- Pie-chart de destino de recursos --}}
+{{-- Gráfico pie-chart --}}
 <div class="card mb-4">
-  <div class="card-body" style="height: 400px;">
-    <canvas id="graficaDestinoRecursos"></canvas>
-  </div>
+    <div class="card-body" style="height: 400px;">
+        <canvas id="graficaDestinoRecursos"></canvas>
+    </div>
 </div>
-
 
 @stop
 

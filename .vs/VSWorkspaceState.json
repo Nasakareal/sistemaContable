@@ -6,9 +6,11 @@
     "\\app\\Http\\Controllers",
     "\\resources",
     "\\resources\\views",
-    "\\resources\\views\\viaticos",
-    "\\resources\\views\\viaticos\\comprobaciones"
+    "\\resources\\views\\admin",
+    "\\resources\\views\\admin\\settings",
+    "\\resources\\views\\admin\\settings\\estadisticas",
+    "\\resources\\views\\admin\\settings\\estadisticas\\vistas"
   ],
-  "SelectedNode": "\\resources\\views\\viaticos\\comprobaciones\\edit.blade.php",
+  "SelectedNode": "\\app\\Http\\Controllers\\EstadisticaController.php",
   "PreviewInSolutionExplorer": false
 }

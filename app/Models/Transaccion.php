@@ -31,9 +31,11 @@ class Transaccion extends Model
         return $this->belongsTo(Capitulo::class);
     }
 
-    public function partida()
+    public function partidas()
     {
-        return $this->belongsTo(Partida::class);
+        return $this->belongsToMany(Partida::class, 'partida_transaccion')
+                    ->withPivot('monto')
+                    ->withTimestamps();
     }
 
     public function unidadResponsable()

@@ -28,8 +28,7 @@
                                 <th>Monto</th>
                                 <th>Fecha</th>
                                 <th>Cuenta Bancaria</th>
-                                <th>Capítulo</th>
-                                <th>Partida</th>
+                                <th>Partidas</th>
                                 <th>UR</th>
                                 <th>Área</th>
                                 <th>Solicitud</th>
@@ -48,8 +47,12 @@
                                     <td>${{ number_format($transaccion->monto, 2) }}</td>
                                     <td>{{ \Carbon\Carbon::parse($transaccion->fecha)->format('d/m/Y H:i') }}</td>
                                     <td>{{ $transaccion->cuentaBancaria->nombre ?? 'N/A' }}</td>
-                                    <td>{{ $transaccion->capitulo->nombre ?? '—' }}</td>
-                                    <td>{{ $transaccion->partida->nombre ?? '—' }}</td>
+                                    <td>
+                                        @foreach ($transaccion->partidas as $partida)
+                                            <span class="badge badge-info">{{ $partida->nombre }}</span>
+                                        @endforeach
+                                    </td>
+
                                     <td>{{ $transaccion->unidadResponsable->nombre ?? '—' }}</td>
                                     <td>{{ $transaccion->area->nombre ?? '—' }}</td>
                                     <td>{{ $transaccion->solicitudDev->codigo ?? '—' }}</td>

@@ -44,32 +44,32 @@ class EstadisticaController extends Controller
     {
         switch ($tipo) {
             case 'mensual':
-                $filtroMes = request('mes');
+                $filtroCuenta = request('cuenta');
+
+                $cuentas = DB::table('cuenta_bancarias')->get();
 
                 $proyecciones = DB::table('proyecciones')
                     ->selectRaw('month, SUM(monto) as total')
                     ->where('year', date('Y'))
-                    ->when($filtroMes, fn($q) => $q->where('month', $filtroMes))
+                    ->when($filtroCuenta, fn($q) => $q->where('cuenta_bancaria_id', $filtroCuenta))
                     ->groupBy('month')
                     ->pluck('total', 'month');
 
                 $ministraciones = DB::table('ministraciones')
                     ->selectRaw('MONTH(fecha) as mes, SUM(importe) as total')
-                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha', $filtroMes))
+                    ->when($filtroCuenta, fn($q) => $q->where('cuenta_bancaria_id', $filtroCuenta))
                     ->groupByRaw('MONTH(fecha)')
                     ->pluck('total', 'mes');
 
                 $requisiciones = DB::connection('inventarios')
                     ->table('requisiciones')
                     ->selectRaw('MONTH(fecha_requisicion) as mes, SUM(monto) as total')
-                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha_requisicion', $filtroMes))
+                    ->when($filtroCuenta, fn($q) => $q->where('cuenta_bancaria_id', $filtroCuenta))
                     ->groupByRaw('MONTH(fecha_requisicion)')
                     ->pluck('total', 'mes');
 
                 $datos = [];
                 for ($mes = 1; $mes <= 12; $mes++) {
-                    if ($filtroMes && $mes != $filtroMes) continue;
-
                     $datos[] = [
                         'mes' => ucfirst(\Carbon\Carbon::create()->month($mes)->locale('es')->monthName),
                         'proyectado' => round($proyecciones[$mes] ?? 0, 2),
@@ -78,71 +78,81 @@ class EstadisticaController extends Controller
                     ];
                 }
 
-                $titulo = 'Comparativo Mensual';
-                return view('admin.settings.estadisticas.vistas.mensual', compact('titulo', 'datos'));
+                $titulo = 'Comparativo Mensual por Cuenta';
+                return view('admin.settings.estadisticas.vistas.mensual', compact('titulo', 'datos', 'cuentas'));
+
 
             case 'ingresos-vs-egresos':
                 $filtroMes = request('mes');
+                $filtroCuenta = request('cuenta');
 
                 // INGRESOS PROYECTADOS
                 $proyecciones = DB::table('proyecciones')
                     ->selectRaw('month, SUM(monto) as total')
                     ->where('year', date('Y'))
                     ->when($filtroMes, fn($q) => $q->where('month', $filtroMes))
+                    ->when($filtroCuenta, fn($q) => $q->where('cuenta_bancaria_id', $filtroCuenta))
                     ->groupBy('month')
                     ->pluck('total', 'month');
 
-                // INGRESOS RECAUDADOS PARA LA GRÁFICA (agrupado por mes)
+                // INGRESOS RECAUDADOS PARA LA GRÁFICA
                 $ingresos = DB::table('ministraciones')
                     ->selectRaw('MONTH(fecha) as mes, SUM(importe) as total')
-                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha', $filtroMes))
                     ->whereYear('fecha', date('Y'))
+                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha', $filtroMes))
+                    ->when($filtroCuenta, fn($q) => $q->where('cuenta_bancaria_id', $filtroCuenta))
                     ->groupByRaw('MONTH(fecha)')
                     ->pluck('total', 'mes');
 
-                // INGRESOS RECAUDADOS DETALLADO PARA LA TABLA (ministraciones completas)
+                // INGRESOS DETALLADO PARA LA TABLA
                 $ministraciones = DB::table('ministraciones')
                     ->whereYear('fecha', date('Y'))
+                    ->when($filtroCuenta, fn($q) => $q->where('cuenta_bancaria_id', $filtroCuenta))
                     ->get();
 
-                // EGRESOS PAGADOS (requisiciones entregadas)
+                // EGRESOS PAGADOS
                 $egresos = DB::connection('inventarios')
                     ->table('requisiciones')
                     ->selectRaw('MONTH(fecha_requisicion) as mes, SUM(monto) as total')
                     ->where('status_requisicion', 'Entregado')
-                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha_requisicion', $filtroMes))
                     ->whereYear('fecha_requisicion', date('Y'))
+                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha_requisicion', $filtroMes))
+                    ->when($filtroCuenta, fn($q) => $q->where('cuenta_bancaria_id', $filtroCuenta))
                     ->groupByRaw('MONTH(fecha_requisicion)')
                     ->pluck('total', 'mes');
 
-                // Estructura final de datos para la gráfica
+                // DATOS PARA LA GRÁFICA
                 $datos = [];
                 for ($mes = 1; $mes <= 12; $mes++) {
                     if ($filtroMes && $mes != $filtroMes) continue;
 
                     $proyectado = round($proyecciones[$mes] ?? 0, 2);
-                    $recaudado = round($ingresos[$mes] ?? 0, 2);
-                    $egresado = round($egresos[$mes] ?? 0, 2);
+                    $recaudado  = round($ingresos[$mes] ?? 0, 2);
+                    $egresado   = round($egresos[$mes] ?? 0, 2);
                     $diferencia = $recaudado - $egresado;
 
                     $datos[] = [
                         'mes' => ucfirst(\Carbon\Carbon::create()->month($mes)->locale('es')->monthName),
                         'proyectado' => $proyectado,
-                        'recaudado' => $recaudado,
-                        'egresado' => $egresado,
+                        'recaudado'  => $recaudado,
+                        'egresado'   => $egresado,
                         'diferencia' => $diferencia,
                         'solo_ministraciones' => $recaudado,
-                        'solo_requisiciones' => $egresado,
+                        'solo_requisiciones'  => $egresado,
                     ];
                 }
 
                 $rendimientos = 0;
 
+                // PASAMOS TAMBIÉN LAS CUENTAS PARA EL SELECT
+                $cuentas = DB::table('cuenta_bancarias')->get();
+
                 $titulo = 'Comparativo de INGRESOS VS GASTOS EJERCIDO';
 
                 return view('admin.settings.estadisticas.vistas.ingresos-vs-egresos', compact(
-                    'titulo', 'datos', 'ministraciones', 'rendimientos'
+                    'titulo', 'datos', 'ministraciones', 'rendimientos', 'cuentas'
                 ));
+
 
             case 'viaticos':
                 $titulo = 'Listado General de Viáticos';

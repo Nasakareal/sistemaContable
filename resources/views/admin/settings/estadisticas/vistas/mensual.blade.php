@@ -8,9 +8,10 @@
 
 @section('content')
 
-{{-- Filtro de mes --}}
+{{-- Filtros de mes y cuenta --}}
 <form method="GET" class="mb-3">
     <div class="row">
+        {{-- FILTRO DE MES --}}
         <div class="col-md-4">
             <label for="mes">Filtrar por mes:</label>
             <select name="mes" id="mes" class="form-control" onchange="this.form.submit()">
@@ -22,9 +23,27 @@
                 @endfor
             </select>
         </div>
+
+        {{-- FILTRO DE CUENTA --}}
+        <div class="col-md-4">
+            <label for="cuenta">Filtrar por cuenta bancaria:</label>
+            <select name="cuenta" id="cuenta" class="form-control" onchange="this.form.submit()">
+                <option value="">-- Todas --</option>
+                @foreach($cuentas as $cuenta)
+                    <option value="{{ $cuenta->id }}" {{ request('cuenta') == $cuenta->id ? 'selected' : '' }}>
+                        {{ $cuenta->nombre }} ({{ $cuenta->numero }})
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        {{-- BOTÓN DE EXPORTACIÓN --}}
         <div class="col-md-4 d-flex align-items-end">
-            <a href="{{ route('estadisticas.descargar', ['tipo' => 'mensual', 'mes' => request('mes')]) }}"
-               class="btn btn-success">
+            <a href="{{ route('estadisticas.descargar', [
+                    'tipo' => 'mensual',
+                    'mes' => request('mes'),
+                    'cuenta' => request('cuenta')
+                ]) }}" class="btn btn-success">
                 <i class="fas fa-file-excel"></i> Exportar a Excel
             </a>
         </div>
@@ -67,6 +86,7 @@
         <canvas id="graficaMensual" height="120"></canvas>
     </div>
 </div>
+
 @stop
 
 @section('js')

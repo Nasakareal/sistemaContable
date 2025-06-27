@@ -37,7 +37,7 @@
                             <!-- Monto -->
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="monto">Monto</label>
+                                    <label for="monto">Monto Total</label>
                                     <input type="number" step="0.01" name="monto" id="monto"
                                            class="form-control @error('monto') is-invalid @enderror"
                                            value="{{ old('monto') }}">
@@ -80,7 +80,7 @@
 
                         <div class="row">
                             <!-- Cuenta Bancaria -->
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="cuenta_bancaria_id">Cuenta Bancaria</label>
                                     <select name="cuenta_bancaria_id" id="cuenta_bancaria_id"
@@ -100,46 +100,11 @@
                                 </div>
                             </div>
 
-                            <!-- Capítulo -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="capitulo_id">Capítulo</label>
-                                    <select name="capitulo_id" id="capitulo_id"
-                                            class="form-control @error('capitulo_id') is-invalid @enderror">
-                                        <option value="">-- Seleccione --</option>
-                                        @foreach ($capitulos as $capitulo)
-                                            <option value="{{ $capitulo->id }}" {{ old('capitulo_id') == $capitulo->id ? 'selected' : '' }}>
-                                                {{ $capitulo->nombre }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('capitulo_id')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <<!-- Partida -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="partida_id">Partida</label>
-                                    <select name="partida_id" id="partida_id"
-                                            class="form-control @error('partida_id') is-invalid @enderror">
-                                        <option value="">-- Seleccione --</option>
-                                    </select>
-                                    @error('partida_id')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
+                            
 
 
                             <!-- Unidad Responsable -->
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="unidad_responsable_id">Unidad Responsable</label>
                                     <select name="unidad_responsable_id" id="unidad_responsable_id"
@@ -160,7 +125,7 @@
                             </div>
 
                             <!-- Área -->
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="area_id">Área</label>
                                     <select name="area_id" id="area_id"
@@ -181,7 +146,7 @@
                             </div>
 
                             <!-- Solicitud de Devolución -->
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="solicitud_dev_id">Solicitud de Devolución</label>
                                     <select name="solicitud_dev_id" id="solicitud_dev_id"
@@ -201,6 +166,16 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <!-- CONTENEDOR PARA PARTIDAS -->
+                        <div id="partidas-container"></div>
+
+                        <!-- BOTÓN PARA AÑADIR MÁS FILAS -->
+                        <div class="text-right mt-3">
+                            <button type="button" id="add-partida" class="btn btn-secondary">+ Agregar otra partida</button>
+                        </div>
+
 
                         <hr>
                         <div class="form-group">
@@ -330,40 +305,96 @@
                 confirmButtonText: 'Aceptar'
             });
         @endif
+
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: @json(session('error')),
+                confirmButtonText: 'Aceptar'
+            });
+        @endif
     </script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const partidasUrlBase = "{{ url('/get-partidas') }}";
-        const capituloSelect = document.getElementById('capitulo_id');
-        const partidaSelect = document.getElementById('partida_id');
 
-        capituloSelect.addEventListener('change', function() {
-            const capituloId = this.value;
-            console.log('Capítulo seleccionado:', capituloId);
+<script>
+    let partidaIndex = 0;
+    const capitulos = @json($capitulos);
+    const partidasUrlBase = "{{ url('/partidas/capitulo') }}"; // Usamos tu ruta buena
+
+    function createPartidaRow(idx) {
+        return `
+            <div class="row partida-row mb-2" data-index="${idx}">
+                <div class="col-md-4">
+                    <label>Capítulo</label>
+                    <select class="form-control capitulo-select" required>
+                        <option value="">-- Seleccione --</option>
+                        ${capitulos.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('')}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label>Partida</label>
+                    <select name="partidas[${idx}][id]" class="form-control partida-select" required>
+                        <option value="">-- Seleccione --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label>Monto</label>
+                    <input type="number" name="partidas[${idx}][monto]" class="form-control" step="0.01" required>
+                </div>
+
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger btn-remove-partida">&times;</button>
+                </div>
+            </div>
+        `;
+    }
+
+    // Agregar nueva fila
+    document.getElementById('add-partida').addEventListener('click', function () {
+        const container = document.getElementById('partidas-container');
+        container.insertAdjacentHTML('beforeend', createPartidaRow(partidaIndex));
+        partidaIndex++;
+    });
+
+    // Eliminar fila
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('btn-remove-partida')) {
+            const rows = document.querySelectorAll('.partida-row');
+            if (rows.length > 1) {
+                e.target.closest('.partida-row').remove();
+            }
+        }
+    });
+
+    // Cargar partidas dinámicamente al cambiar capítulo (usando fetch)
+    document.addEventListener('change', function (e) {
+        if (e.target.classList.contains('capitulo-select')) {
+            const capituloId = e.target.value;
+            const row = e.target.closest('.partida-row');
+            const partidaSelect = row.querySelector('.partida-select');
+
             if (!capituloId) {
                 partidaSelect.innerHTML = '<option value="">-- Seleccione --</option>';
                 return;
             }
 
-            partidaSelect.innerHTML = '<option value="">Cargando partidas...</option>';
-
+            partidaSelect.innerHTML = '<option value="">Cargando...</option>';
             const url = `${partidasUrlBase}/${capituloId}?t=${Date.now()}`;
-            console.log('Fetching URL:', url);
+
             fetch(url)
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error en la respuesta de la petición');
-                    }
+                    if (!response.ok) throw new Error('Error al obtener partidas');
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Partidas recibidas:', data);
                     partidaSelect.innerHTML = '<option value="">-- Seleccione --</option>';
-                    data.forEach(function(partida) {
+                    data.forEach(partida => {
                         const option = document.createElement('option');
                         option.value = partida.id;
-                        option.text = `${partida.nombre} - ${partida.descripcion}`;
+                        option.text = `${partida.nombre} - ${partida.descripcion ?? ''}`;
                         partidaSelect.appendChild(option);
                     });
                 })
@@ -371,11 +402,12 @@
                     console.error('Error al cargar las partidas:', error);
                     partidaSelect.innerHTML = '<option value="">-- Seleccione --</option>';
                 });
-        });
+        }
+    });
+
+    // Cargar una fila por defecto
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('add-partida').click();
     });
 </script>
-
-
-
-
 @stop
