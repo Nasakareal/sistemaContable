@@ -24,6 +24,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'editar roles',
             'eliminar roles',
 
+            // Historial
+            'ver historial',
+
             // Fondos
             'ver fondos',
             'crear fondos',

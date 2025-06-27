@@ -72,22 +72,28 @@ class UserController extends Controller
     {
         // Validar los datos
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'area' => 'nullable|string|max:30',
-            'role' => 'required|exists:roles,name',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email,' . $id,
+            'area'     => 'nullable|string|max:30',
+            'role'     => 'required|exists:roles,name',
+            'password' => 'nullable|min:6|confirmed',
         ]);
 
         try {
             // Buscar y actualizar el usuario
             $user = User::findOrFail($id);
-            $user->update([
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-                'area' => $validatedData['area'] ?? null,
-            ]);
+            $user->name  = $validatedData['name'];
+            $user->email = $validatedData['email'];
+            $user->area  = $validatedData['area'] ?? null;
 
-            // Actualizar los roles del usuario
+            // Solo si se proporciona una nueva contraseña
+            if (!empty($validatedData['password'])) {
+                $user->password = bcrypt($validatedData['password']);
+            }
+
+            $user->save();
+
+            // Actualizar roles
             $user->syncRoles([$validatedData['role']]);
 
             Log::info("Usuario actualizado exitosamente: {$user->name}");

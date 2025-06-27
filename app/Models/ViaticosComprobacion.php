@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class ViaticosComprobacion extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'viaticos_comprobacions';
 
@@ -16,7 +17,31 @@ class ViaticosComprobacion extends Model
         'cuenta_contable',
         'monto',
         'tipo',
+        'fecha_comprobacion',
     ];
+
+    protected $casts = [
+        'fecha_comprobacion' => 'date',
+    ];
+
+    /**
+     * Configuración de Spatie Activity Log
+     */
+    protected static $logAttributes = [
+        'cuenta_contable',
+        'monto',
+        'tipo',
+        'fecha_comprobacion',
+    ];
+
+    protected static $logName = 'comprobacion';
+
+    protected static $logOnlyDirty = true;
+
+    public function getLogNameToUse(string $eventName = ''): string
+    {
+        return static::$logName;
+    }
 
     public function viatico()
     {

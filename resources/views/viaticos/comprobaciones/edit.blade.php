@@ -179,7 +179,7 @@
                 </div>
               </div>
 
-              <div class="row mt-2">
+              <div class="row">
                 {{-- Tipo --}}
                 <div class="col-md-3">
                   <label>Tipo</label>
@@ -190,6 +190,16 @@
                     <option value="ADICIONAL"{{ $comprobacion->tipo=='ADICIONAL'? 'selected':'' }}>ADICIONAL</option>
                   </select>
                 </div>
+
+                <div class="col-md-3">
+                  <label>Fecha de Comprobación</label>
+                  <input type="date"
+                         name="fecha_comprobacion"
+                         class="form-control"
+                         value="{{ old('fecha_comprobacion', $comprobacion->fecha_comprobacion?->format('Y-m-d')) }}"
+                         required>
+                </div>
+
               </div>
             </div>
           </div>

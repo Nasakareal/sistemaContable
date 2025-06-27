@@ -33,13 +33,14 @@ class ViaticosComprobacionController extends Controller
 
     public function store(Request $request, Viatico $viatico)
     {
-        // 1) Validación: no hay comprobaciones.*.monto, solo partidas
+        // 1) Validación
         $request->validate([
-            'comprobaciones.*.cuenta_contable'   => 'required|string',
-            'comprobaciones.*.tipo'              => 'required|in:GASTO,REINTEGRO,ADICIONAL',
-            'comprobaciones.*.partidas'          => 'required|array|min:1',
-            'comprobaciones.*.partidas.*.id'     => 'required|exists:partidas,id',
-            'comprobaciones.*.partidas.*.monto'  => 'required|numeric|min:0',
+            'comprobaciones.*.cuenta_contable'      => 'required|string',
+            'comprobaciones.*.tipo'                 => 'required|in:GASTO,REINTEGRO,ADICIONAL',
+            'comprobaciones.*.fecha_comprobacion'   => 'required|date',
+            'comprobaciones.*.partidas'             => 'required|array|min:1',
+            'comprobaciones.*.partidas.*.id'        => 'required|exists:partidas,id',
+            'comprobaciones.*.partidas.*.monto'     => 'required|numeric|min:0',
         ]);
 
         // 2) Acumula gastos actuales para tipo GASTO
@@ -47,7 +48,7 @@ class ViaticosComprobacionController extends Controller
                                   ->where('tipo', 'GASTO')
                                   ->sum('monto');
 
-        // 3) Recorre y guarda
+        // 3) Recorre y guarda comprobaciones
         foreach ($request->comprobaciones as $comp) {
             // Suma automática de montos de partidas
             $totalPartidas = collect($comp['partidas'])->sum('monto');
@@ -55,25 +56,26 @@ class ViaticosComprobacionController extends Controller
             // Valida no exceder el importe total solo si es GASTO
             if ($comp['tipo'] === 'GASTO' && $gastosActuales + $totalPartidas > $viatico->importe_total) {
                 return back()
-                      ->withErrors(['comprobaciones' => 'Este gasto excede el importe disponible.'])
-                      ->withInput();
+                    ->withErrors(['comprobaciones' => 'Este gasto excede el importe disponible.'])
+                    ->withInput();
             }
 
             // 4) Crea la comprobación usando el total de partidas
             $comprobacion = ViaticosComprobacion::create([
-                'viatico_id'      => $viatico->id,
-                'cuenta_contable' => $comp['cuenta_contable'],
-                'monto'           => $totalPartidas,
-                'tipo'            => $comp['tipo'],
+                'viatico_id'         => $viatico->id,
+                'cuenta_contable'    => $comp['cuenta_contable'],
+                'monto'              => $totalPartidas,
+                'tipo'               => $comp['tipo'],
+                'fecha_comprobacion' => $comp['fecha_comprobacion'],
             ]);
 
-            // 5) Sincroniza las partidas
+            // 5) Asocia las partidas con sus montos
             $syncData = collect($comp['partidas'])
                 ->mapWithKeys(fn($p) => [$p['id'] => ['monto' => $p['monto']]])
                 ->all();
             $comprobacion->partidas()->sync($syncData);
 
-            // 6) Si fue GASTO, actualiza el acumulado para la siguiente iteración
+            // 6) Actualiza el acumulado de gasto si aplica
             if ($comp['tipo'] === 'GASTO') {
                 $gastosActuales += $totalPartidas;
             }
@@ -93,6 +95,7 @@ class ViaticosComprobacionController extends Controller
                ->with('success', 'Comprobaciones registradas correctamente.');
     }
 
+
     public function edit(Viatico $viatico, ViaticosComprobacion $comprobacion)
     {
         $capitulos = Capitulo::with('partidas')->get();
@@ -102,13 +105,14 @@ class ViaticosComprobacionController extends Controller
 
     public function update(Request $request, Viatico $viatico, ViaticosComprobacion $comprobacion)
     {
-        // 1) Validación: ya no pedimos 'monto' directo
+        // 1) Validación (incluye la nueva fecha de comprobación)
         $request->validate([
-            'cuenta_contable'   => 'required|string',
-            'tipo'              => 'required|in:GASTO,REINTEGRO,ADICIONAL',
-            'partidas'          => 'required|array|min:1',
-            'partidas.*.id'     => 'required|exists:partidas,id',
-            'partidas.*.monto'  => 'required|numeric|min:0',
+            'cuenta_contable'       => 'required|string',
+            'tipo'                  => 'required|in:GASTO,REINTEGRO,ADICIONAL',
+            'fecha_comprobacion'    => 'required|date',
+            'partidas'              => 'required|array|min:1',
+            'partidas.*.id'         => 'required|exists:partidas,id',
+            'partidas.*.monto'      => 'required|numeric|min:0',
         ]);
 
         // 2) Suma automática de partidas
@@ -128,11 +132,12 @@ class ViaticosComprobacionController extends Controller
             }
         }
 
-        // 4) Actualizar comprobación con el monto calculado
+        // 4) Actualizar comprobación
         $comprobacion->update([
-            'cuenta_contable' => $request->cuenta_contable,
-            'tipo'            => $request->tipo,
-            'monto'           => $totalPartidas,
+            'cuenta_contable'    => $request->cuenta_contable,
+            'tipo'               => $request->tipo,
+            'monto'              => $totalPartidas,
+            'fecha_comprobacion' => $request->fecha_comprobacion,
         ]);
 
         // 5) Sincronizar partidas
@@ -156,6 +161,7 @@ class ViaticosComprobacionController extends Controller
             ->route('comprobaciones.index', $viatico)
             ->with('success', 'Comprobación actualizada correctamente.');
     }
+
 
     public function show(Viatico $viatico, ViaticosComprobacion $comprobacion)
     {

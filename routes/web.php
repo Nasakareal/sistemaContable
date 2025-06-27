@@ -254,15 +254,11 @@ Route::prefix('admin/settings')->middleware('can:ver configuraciones')->group(fu
     });
 
     // Actividad
-    Route::prefix('actividad')->middleware('can:ver actividades')->group(function () {
-        Route::get('/', [App\Http\Controllers\ActividadController::class, 'index'])->name('actividades.index');
-        Route::get('/actividad', [App\Http\Controllers\ActividadController::class, 'create'])->middleware('can:crear actividades')->name('actividades.create');
-        Route::post('/', [App\Http\Controllers\ActividadController::class, 'store'])->middleware('can:crear actividades')->name('actividades.store');
-        Route::get('/{actividad}', [App\Http\Controllers\ActividadController::class, 'show'])->middleware('can:ver actividades')->name('actividades.show');
-        Route::get('/{actividad}/edit', [App\Http\Controllers\ActividadController::class, 'edit'])->middleware('can:editar actividades')->name('actividades.edit');
-        Route::put('/{actividad}', [App\Http\Controllers\ActividadController::class, 'update'])->middleware('can:editar actividades')->name('actividades.update');
-        Route::delete('/{actividad}', [App\Http\Controllers\ActividadController::class, 'destroy'])->middleware('can:eliminar actividades')->name('actividades.destroy');
+    Route::prefix('historial')->middleware('can:ver historial')->group(function () {
+        Route::get('/', [App\Http\Controllers\ActivityLogController::class, 'index'])->name('actividades.index');
+        Route::get('/{log}', [App\Http\Controllers\ActivityLogController::class, 'show'])->name('actividades.show');
     });
+
 });
 
 Route::get('/prueba-404', function () {

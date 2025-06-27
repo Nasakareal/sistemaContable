@@ -8,10 +8,11 @@ use App\Models\Empleado;
 use App\Models\Fondo;
 use App\Models\CuentaBancaria;
 use App\Models\Partida;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class ViaticoReal extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'viaticos';
 
@@ -24,6 +25,25 @@ class ViaticoReal extends Model
         'estatus',
         'observaciones',
     ];
+
+    protected $casts = [
+        'fecha_entrega' => 'date',
+    ];
+
+    /**
+     * Configuración de Spatie Activity Log
+     */
+    protected static $logAttributes = [
+        'estatus',
+        'importe_total',
+        'fecha_entrega',
+        'cuenta_bancaria_id',
+        'fondo_id',
+        'empleado_id',
+    ];
+
+    protected static $logName = 'viatico';
+    protected static $logOnlyDirty = true;
 
     public function empleado()
     {

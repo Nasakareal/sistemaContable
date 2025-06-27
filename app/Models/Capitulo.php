@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Capitulo extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'capitulos';
 
@@ -15,6 +16,23 @@ class Capitulo extends Model
         'nombre',
         'descripcion',
     ];
+
+    /**
+     * Configuración de historial con Spatie
+     */
+    protected static $logAttributes = [
+        'nombre',
+        'descripcion',
+    ];
+
+    protected static $logOnlyDirty = true;
+
+    protected static $logName = 'capitulo';
+
+    public function getLogNameToUse(string $eventName = ''): string
+    {
+        return static::$logName;
+    }
 
     public function partidas()
     {

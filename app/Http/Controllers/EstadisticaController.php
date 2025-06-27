@@ -157,9 +157,14 @@ class EstadisticaController extends Controller
             case 'viaticos':
                 $titulo = 'Listado General de Viáticos';
 
-                $viaticos = \App\Models\ViaticoReal::with(['empleado', 'fondo', 'cuentaBancaria'])
-                    ->orderByDesc('fecha_entrega')
-                    ->get();
+                $viaticos = \App\Models\ViaticoReal::with([
+                    'empleado',
+                    'fondo',
+                    'cuentaBancaria',
+                    'comprobaciones' // ahora sí incluye las fechas
+                ])
+                ->orderByDesc('fecha_entrega')
+                ->get();
 
                 return view('admin.settings.estadisticas.vistas.viaticos', compact('titulo', 'viaticos'));
 
@@ -264,10 +269,14 @@ class EstadisticaController extends Controller
                 return new IngresosVsEgresosExport($datos, $ministraciones, $rendimientos);
 
             case 'viaticos':
-                $viaticos = \App\Models\ViaticoReal::with(['empleado', 'fondo', 'cuentaBancaria', 'comprobaciones'])->orderByDesc('fecha_entrega')->get();
+                $viaticos = \App\Models\ViaticoReal::with([
+                    'empleado',
+                    'fondo',
+                    'cuentaBancaria',
+                    'comprobaciones'
+                ])->orderByDesc('fecha_entrega')->get();
 
                 return Excel::download(new ViaticosExport($viaticos), 'viaticos.xlsx');
-
 
             default:
                 abort(404, 'Descarga no disponible');

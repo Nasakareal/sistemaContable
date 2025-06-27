@@ -81,7 +81,7 @@
                 <span class="info-box-icon bg-indigo"><i class="fa-solid fa-user-secret"></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text"><b>Registro de Actividad</b></span>
-                    <a href="{{ url('/admin/settings/actividad') }}" class="btn btn-primary btn-sm">Acceder</a>
+                    <a href="{{ url('/admin/settings/historial') }}" class="btn btn-primary btn-sm">Acceder</a>
                 </div>
             </div>
         </div>

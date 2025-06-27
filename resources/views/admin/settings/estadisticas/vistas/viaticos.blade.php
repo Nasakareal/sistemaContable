@@ -36,7 +36,10 @@
                                 <div class="border rounded p-1 mb-1 bg-light">
                                     <strong>{{ $c->tipo }}</strong> — ${{ number_format($c->monto, 2) }}<br>
                                     <small>{{ $c->descripcion ?? '---' }}</small><br>
-                                    <span class="badge bg-secondary">{{ $c->cuenta_contable }}</span>
+                                    <span class="badge bg-secondary">{{ $c->cuenta_contable }}</span><br>
+                                    <small class="text-muted">
+                                        Comprobado el: {{ $c->fecha_comprobacion?->format('d/m/Y') ?? 'Sin fecha' }}
+                                    </small>
                                 </div>
                             @endforeach
                         @endif

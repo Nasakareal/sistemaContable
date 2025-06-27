@@ -7,60 +7,31 @@
 @stop
 
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-outline card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Registro de Actividades</h3>
-                </div>
-                <div class="card-body">
-                    <table id="actividad" class="table table-striped table-bordered table-hover table-sm">
-                        <thead>
-                            <tr>
-                                <th><center>Número</center></th>
-                                <th><center>Fecha</center></th>
-                                <th><center>Usuario</center></th>
-                                <th><center>Acción</center></th>
-                                <th><center>Detalles</center></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($activities as $index => $activity)
-                                <tr>
-                                    <td style="text-align: center">{{ $index + 1 }}</td>
-                                    <td>{{ $activity->created_at->format('d/m/Y H:i') }}</td>
-                                    <td>{{ $activity->causer ? $activity->causer->name : 'Sistema' }}</td>
-                                    <td>{{ $activity->description }}</td>
-                                    <td>
-                                        @if($activity->properties->isNotEmpty())
-                                            @php
-                                                $properties = $activity->properties->toArray();
-                                            @endphp
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Módulos con Actividades Registradas</h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    @forelse($modulos as $modulo)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ $modulo->log_name === 'default' ? 'General' : ucfirst($modulo->log_name) }}
+                            <a href="{{ route('actividades.show', ['log' => $modulo->log_name]) }}" class="btn btn-sm btn-primary">Ver Actividades</a>
+                        </li>
 
-                                            @if(isset($properties['attributes']))
-                                                <ul style="list-style: none; padding: 0; margin:0;">
-                                                    @foreach($properties['attributes'] as $key => $value)
-                                                        <li><strong>{{ ucfirst($key) }}:</strong> {{ $value }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            @else
-                                                <pre>{{ json_encode($properties, JSON_PRETTY_PRINT) }}</pre>
-                                            @endif
-                                        @else
-                                            Sin detalles
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    
-                    {{ $activities->links() }}
-                </div>
+                    @empty
+                        <li class="list-group-item text-muted">No hay módulos con actividades registradas.</li>
+                    @endforelse
+                </ul>
             </div>
         </div>
     </div>
+</div>
 @stop
+
+
 
 @section('css')
     <style>
@@ -153,6 +124,32 @@
             background-color: #2563eb !important;
             color: white !important;
         }
+
+        /* Estilo oscuro para los módulos listados */
+        .list-group {
+            background-color: #1f2937 !important;
+        }
+
+        .list-group-item {
+            background-color: #111827 !important;
+            color: white !important;
+            border: 1px solid #374151;
+        }
+
+        .list-group-item:hover {
+            background-color: #1e293b !important;
+        }
+
+        .btn-primary {
+            background-color: #2563eb !important;
+            border-color: #2563eb !important;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8 !important;
+            border-color: #1d4ed8 !important;
+        }
+
     </style>
 
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">

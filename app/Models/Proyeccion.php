@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Proyeccion extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'proyecciones';
 
@@ -17,6 +18,25 @@ class Proyeccion extends Model
         'year',
         'monto',
     ];
+
+    /**
+     * Configuración del historial
+     */
+    protected static $logAttributes = [
+        'cuenta_bancaria_id',
+        'month',
+        'year',
+        'monto',
+    ];
+
+    protected static $logOnlyDirty = true;
+
+    protected static $logName = 'proyeccion';
+
+    public function getLogNameToUse(string $eventName = ''): string
+    {
+        return static::$logName;
+    }
 
     public function cuentaBancaria()
     {

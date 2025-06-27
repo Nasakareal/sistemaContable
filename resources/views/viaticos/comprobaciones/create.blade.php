@@ -155,7 +155,7 @@
                          required>
                 </div>
               </div>
-              <div class="row mt-2">
+              <div class="row">
                 <div class="col-md-3">
                   <label>Tipo</label>
                   <select name="comprobaciones[0][tipo]"
@@ -167,7 +167,17 @@
                     <option value="ADICIONAL">ADICIONAL</option>
                   </select>
                 </div>
+
+                <div class="col-md-3">
+                  <label>Fecha de Comprobación</label>
+                  <input type="date"
+                         name="comprobaciones[0][fecha_comprobacion]"
+                         class="form-control"
+                         required>
+                </div>
               </div>
+
+              
             </div>
           </div>
 
@@ -255,7 +265,7 @@
                    required>
           </div>
         </div>
-        <div class="row mt-2">
+        <div class="row">
           <div class="col-md-3">
             <label>Tipo</label>
             <select name="comprobaciones[${idx}][tipo]"
@@ -267,6 +277,13 @@
               <option value="ADICIONAL">ADICIONAL</option>
             </select>
           </div>
+          <div class="col-md-3">
+                  <label>Fecha de Comprobación</label>
+                  <input type="date"
+                         name="comprobaciones[${idx}][fecha_comprobacion]"
+                         class="form-control"
+                         required>
+                </div>
         </div>
       </div>`;
   }

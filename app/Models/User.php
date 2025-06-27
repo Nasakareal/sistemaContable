@@ -34,23 +34,25 @@ class User extends Authenticatable
     ];
 
     /**
-     * Configuración para registrar la actividad.
-     *
-     * @return \Spatie\Activitylog\LogOptions
+     * Opciones para el registro de actividad (Spatie)
      */
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['name', 'email', 'password', 'estado', 'foto_perfil', 'area'])
-            ->setLogName('users')
-            ->logOnlyDirty();
+            ->logOnly([
+                'name',
+                'email',
+                'password',
+                'estado',
+                'foto_perfil',
+                'area'
+            ])
+            ->logOnlyDirty()
+            ->setLogName('users');
     }
 
     /**
-     * Personaliza la descripción del evento.
-     *
-     * @param string $eventName
-     * @return string
+     * Descripción personalizada del evento
      */
     public function getDescriptionForEvent(string $eventName): string
     {
