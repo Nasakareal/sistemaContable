@@ -11,10 +11,9 @@ class MovimientoController extends Controller
 {
     public function index()
     {
-        // Obtener el valor del filtro (revisadas = 1 para mostrar bloqueadas)
         $soloRevisadas = request('revisadas') === '1';
 
-        // Requisiciones desde sistemaInventarios, incluyendo el campo 'bloqueada'
+        // Requisiciones del sistemaInventarios
         $requisiciones = DB::connection('inventarios')
             ->table('requisiciones')
             ->select(
@@ -31,23 +30,28 @@ class MovimientoController extends Controller
             )
             ->get();
 
-        // Traer las cuentas desde sistemaContable
+        // Obtener alertas del sistemaInventarios relacionadas con requisiciones
+        $alertas = DB::connection('inventarios')
+            ->table('alerts')
+            ->where('tipo', 'Requisición')
+            ->pluck('mensaje'); // también puedes usar otra clave para distinguir
+
+        // Cuentas locales
         $cuentas = DB::table('cuenta_bancarias')->select('id', 'nombre')->get()->keyBy('id');
 
-        // Añadir el nombre de cuenta a cada requisición
+        // Añadir campos
         foreach ($requisiciones as $r) {
             $r->cuenta = $cuentas[$r->cuenta_bancaria_id]->nombre ?? 'Sin cuenta';
+            $r->alertada = $alertas->contains(function ($mensaje) use ($r) {
+                return str_contains($mensaje, (string) $r->id); // o alguna lógica para identificar la alerta
+            });
         }
 
-        // Aplicar el filtro si se solicitó ver solo las revisadas (bloqueadas)
         if ($soloRevisadas) {
             $requisiciones = $requisiciones->filter(fn($r) => $r->bloqueada == 1);
         }
 
-        // Nominas aún vacías
         $nominas = collect();
-
-        // Unir ambos
         $movimientos = $requisiciones->merge($nominas);
 
         return view('movimientos.index', compact('movimientos'));

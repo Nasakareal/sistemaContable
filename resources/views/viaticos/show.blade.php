@@ -64,20 +64,26 @@
                 </div>
 
                 <!-- Partidas -->
-                <hr>
-                <h4>Partidas</h4>
-                @foreach ($viatico->partidas as $i => $partida)
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <strong>Partida {{ $i + 1 }}:</strong>
-                            <p>{{ $partida->nombre }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Monto:</strong>
-                            <p>${{ number_format($partida->pivot->monto, 2) }}</p>
-                        </div>
-                    </div>
-                @endforeach
+<hr>
+<h4>Partidas Comprobadas</h4>
+
+@forelse ($viatico->comprobaciones as $comprobacion)
+    @foreach ($comprobacion->partidas as $i => $partida)
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <strong>Partida {{ $i + 1 }}:</strong>
+                <p>{{ $partida->nombre }}</p>
+            </div>
+            <div class="col-md-6">
+                <strong>Monto:</strong>
+                <p>${{ number_format($partida->pivot->monto, 2) }}</p>
+            </div>
+        </div>
+    @endforeach
+@empty
+    <p>No hay partidas comprobadas.</p>
+@endforelse
+
 
                 <hr>
                 <a href="{{ route('viaticos.index') }}" class="btn btn-secondary">

@@ -41,7 +41,7 @@
                             <div class="form-group">
                                 <label for="fecha_entrega">Fecha de Entrega</label>
                                 <input type="date" name="fecha_entrega" class="form-control"
-                                    value="{{ old('fecha_entrega', $viatico->fecha_entrega) }}" required>
+                                    value="{{ old('fecha_entrega', optional($viatico->fecha_entrega)->format('Y-m-d')) }}" required>
                             </div>
                         </div>
                     </div>
@@ -105,6 +105,16 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="revisado">¿Revisado?</label><br>
+                        <div class="form-check">
+                            <input type="checkbox" name="revisado" id="revisado" value="1" class="form-check-input"
+                                {{ old('revisado', $viatico->revisado) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="revisado">Marcar como revisado</label>
+                        </div>
+                    </div>
+
 
                     <!-- Observaciones -->
                     <div class="form-group">

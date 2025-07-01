@@ -30,6 +30,7 @@
                                 <th><center>Cuenta Bancaria</center></th>
                                 <th><center>Importe</center></th>
                                 <th><center>Estatus</center></th>
+                                <th><center>Revisado</center></th>
                                 <th><center>Acciones</center></th>
                             </tr>
                         </thead>
@@ -56,6 +57,13 @@
                                         ">
                                             {{ $v->estatus }}
                                         </span>
+                                    </td>
+                                    <td>
+                                        @if($v->revisado)
+                                            <span class="badge bg-success">Sí</span>
+                                        @else
+                                            <span class="badge bg-secondary">No</span>
+                                        @endif
                                     </td>
                                     <td class="text-center">
                                         <a href="{{ route('viaticos.show', $v->id) }}" class="btn btn-info btn-sm">

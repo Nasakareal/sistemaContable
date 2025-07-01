@@ -37,6 +37,7 @@ class ViaticoController extends Controller
             'importe_total'       => 'required|numeric|min:0',
             'estatus'             => 'required|in:PENDIENTE,COMPROBADO,PARCIAL,CANCELADO',
             'observaciones'       => 'nullable|string',
+            'revisado'            => 'nullable|boolean',
         ]);
 
         $cuenta = CuentaBancaria::findOrFail($request->cuenta_bancaria_id);
@@ -68,7 +69,6 @@ class ViaticoController extends Controller
         return view('viaticos.edit', compact('viatico', 'fondos', 'cuentas', 'empleados'));
     }
 
-
     public function update(Request $request, Viatico $viatico)
     {
         $request->validate([
@@ -79,25 +79,22 @@ class ViaticoController extends Controller
             'importe_total'       => 'required|numeric|min:0',
             'estatus'             => 'required|in:PENDIENTE,COMPROBADO,PARCIAL,CANCELADO',
             'observaciones'       => 'nullable|string',
+            'revisado'            => 'nullable|boolean',
         ]);
 
         // Ajustar saldo si cambió cuenta o importe
         if ($viatico->cuenta_bancaria_id != $request->cuenta_bancaria_id) {
-            // Reembolsar a la cuenta anterior
             $cuentaAnterior = CuentaBancaria::findOrFail($viatico->cuenta_bancaria_id);
             $cuentaAnterior->saldo += $viatico->importe_total;
             $cuentaAnterior->save();
 
-            // Cobrar de la nueva cuenta
             $cuentaNueva = CuentaBancaria::findOrFail($request->cuenta_bancaria_id);
             if ($request->importe_total > $cuentaNueva->saldo) {
                 return back()->withErrors(['importe_total' => 'Saldo insuficiente en la cuenta seleccionada.'])->withInput();
             }
             $cuentaNueva->saldo -= $request->importe_total;
             $cuentaNueva->save();
-
         } elseif ($viatico->importe_total != $request->importe_total) {
-            // Si solo cambió el importe, ajustar saldo
             $cuenta = CuentaBancaria::findOrFail($viatico->cuenta_bancaria_id);
             $diferencia = $request->importe_total - $viatico->importe_total;
 
@@ -109,7 +106,6 @@ class ViaticoController extends Controller
             $cuenta->save();
         }
 
-        // Actualizar el viático
         $viatico->update($request->all());
 
         return redirect()->route('viaticos.index')->with('success', 'Viático actualizado correctamente.');
@@ -117,7 +113,6 @@ class ViaticoController extends Controller
 
     public function destroy(Viatico $viatico)
     {
-        // Reintegrar el saldo
         $cuenta = CuentaBancaria::find($viatico->cuenta_bancaria_id);
         $cuenta->saldo += $viatico->importe_total;
         $cuenta->save();

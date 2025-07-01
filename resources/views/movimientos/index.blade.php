@@ -40,6 +40,7 @@
                                     <th><center>Origen</center></th>
                                     <th><center>Cuenta</center></th>
                                     <th><center>Revisión</center></th>
+                                    <th><center>Alerta</center></th>
                                     <th><center>Acciones</center></th>
                                 </tr>
                             </thead>
@@ -62,11 +63,17 @@
                                                 <span class="badge bg-warning text-dark">No revisada</span>
                                             @endif
                                         </td>
+                                        <td>
+                                            @if(isset($mov->alertada) && $mov->alertada)
+                                                <span class="badge bg-info">Alerta enviada</span>
+                                            @else
+                                                <span class="badge bg-secondary">Sin alerta</span>
+                                            @endif
+                                        </td>
                                         <td style="text-align: center">
                                             <a href="{{ route('movimientos.show', $mov->id) }}" class="btn btn-info btn-sm">
                                                 <i class="fa-regular fa-eye"></i> Ver
                                             </a>
-                                            {{-- Botones futuros --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -79,7 +86,6 @@
         </div>
     </div>
 @stop
-
 
 @section('css')
     <style>

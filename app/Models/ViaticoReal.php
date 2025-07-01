@@ -24,6 +24,7 @@ class ViaticoReal extends Model
         'importe_total',
         'estatus',
         'observaciones',
+        'revisado',
     ];
 
     protected $casts = [
@@ -40,6 +41,7 @@ class ViaticoReal extends Model
         'cuenta_bancaria_id',
         'fondo_id',
         'empleado_id',
+        'revisado',
     ];
 
     protected static $logName = 'viatico';
