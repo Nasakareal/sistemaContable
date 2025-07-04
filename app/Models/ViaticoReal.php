@@ -18,6 +18,7 @@ class ViaticoReal extends Model
 
     protected $fillable = [
         'empleado_id',
+        'quien_solicita',
         'fondo_id',
         'cuenta_bancaria_id',
         'fecha_entrega',
@@ -35,12 +36,13 @@ class ViaticoReal extends Model
      * Configuración de Spatie Activity Log
      */
     protected static $logAttributes = [
-        'estatus',
-        'importe_total',
-        'fecha_entrega',
-        'cuenta_bancaria_id',
-        'fondo_id',
         'empleado_id',
+        'quien_solicita',
+        'fondo_id',
+        'cuenta_bancaria_id',
+        'fecha_entrega',
+        'importe_total',
+        'estatus',
         'revisado',
     ];
 

@@ -34,7 +34,7 @@ class MovimientoController extends Controller
         $alertas = DB::connection('inventarios')
             ->table('alerts')
             ->where('tipo', 'Requisición')
-            ->pluck('mensaje'); // también puedes usar otra clave para distinguir
+            ->pluck('mensaje');
 
         // Cuentas locales
         $cuentas = DB::table('cuenta_bancarias')->select('id', 'nombre')->get()->keyBy('id');
@@ -43,7 +43,7 @@ class MovimientoController extends Controller
         foreach ($requisiciones as $r) {
             $r->cuenta = $cuentas[$r->cuenta_bancaria_id]->nombre ?? 'Sin cuenta';
             $r->alertada = $alertas->contains(function ($mensaje) use ($r) {
-                return str_contains($mensaje, (string) $r->id); // o alguna lógica para identificar la alerta
+                return str_contains($mensaje, (string) $r->id);
             });
         }
 

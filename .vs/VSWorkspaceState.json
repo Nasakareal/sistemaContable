@@ -4,12 +4,13 @@
     "\\app",
     "\\app\\Http",
     "\\app\\Http\\Controllers",
-    "\\app\\Models",
+    "\\database",
+    "\\database\\migrations",
     "\\resources",
     "\\resources\\views",
-    "\\resources\\views\\movimientos",
+    "\\resources\\views\\viaticos",
     "\\routes"
   ],
-  "SelectedNode": "\\resources\\views\\movimientos\\index.blade.php",
+  "SelectedNode": "\\resources\\views\\viaticos\\show.blade.php",
   "PreviewInSolutionExplorer": false
 }

@@ -30,60 +30,79 @@
                 </div>
 
                 <div class="row">
+                    <!-- Quién Solicita -->
+                    <div class="col-md-6">
+                        <strong>Solicita:</strong>
+                        <p>{{ $viatico->quien_solicita ?? 'N/A' }}</p>
+                    </div>
+
                     <!-- Fondo -->
                     <div class="col-md-6">
                         <strong>Fondo:</strong>
                         <p>{{ $viatico->fondo->nombre ?? 'N/A' }}</p>
                     </div>
+                </div>
 
+                <div class="row">
                     <!-- Cuenta -->
                     <div class="col-md-6">
                         <strong>Cuenta Bancaria:</strong>
                         <p>{{ $viatico->cuentaBancaria->nombre ?? 'N/A' }} ({{ $viatico->cuentaBancaria->numero ?? '---' }})</p>
                     </div>
-                </div>
 
-                <div class="row">
                     <!-- Importe -->
                     <div class="col-md-6">
                         <strong>Importe Total:</strong>
                         <p>${{ number_format($viatico->importe_total, 2) }}</p>
                     </div>
+                </div>
 
+                <div class="row">
                     <!-- Estatus -->
                     <div class="col-md-6">
                         <strong>Estatus:</strong>
                         <p>{{ $viatico->estatus }}</p>
                     </div>
+
+                    <!-- Revisado -->
+                    <div class="col-md-6">
+                        <strong>Revisado:</strong>
+                        <p>
+                            @if($viatico->revisado)
+                                <span class="badge bg-success">Sí</span>
+                            @else
+                                <span class="badge bg-secondary">No</span>
+                            @endif
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Observaciones -->
-                <div class="form-group">
+                <div class="form-group mt-3">
                     <strong>Observaciones:</strong>
                     <p>{{ $viatico->observaciones ?: 'N/A' }}</p>
                 </div>
 
                 <!-- Partidas -->
-<hr>
-<h4>Partidas Comprobadas</h4>
+                <hr>
+                <h4>Partidas Comprobadas</h4>
 
-@forelse ($viatico->comprobaciones as $comprobacion)
-    @foreach ($comprobacion->partidas as $i => $partida)
-        <div class="row mb-2">
-            <div class="col-md-6">
-                <strong>Partida {{ $i + 1 }}:</strong>
-                <p>{{ $partida->nombre }}</p>
-            </div>
-            <div class="col-md-6">
-                <strong>Monto:</strong>
-                <p>${{ number_format($partida->pivot->monto, 2) }}</p>
-            </div>
-        </div>
-    @endforeach
-@empty
-    <p>No hay partidas comprobadas.</p>
-@endforelse
-
+                @forelse ($viatico->comprobaciones as $comprobacion)
+                    @foreach ($comprobacion->partidas as $i => $partida)
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <strong>Partida {{ $i + 1 }}:</strong>
+                                <p>{{ $partida->nombre }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Monto:</strong>
+                                <p>${{ number_format($partida->pivot->monto, 2) }}</p>
+                            </div>
+                        </div>
+                    @endforeach
+                @empty
+                    <p>No hay partidas comprobadas.</p>
+                @endforelse
 
                 <hr>
                 <a href="{{ route('viaticos.index') }}" class="btn btn-secondary">

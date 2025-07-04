@@ -25,6 +25,7 @@
                             <tr>
                                 <th><center>#</center></th>
                                 <th><center>Empleado</center></th>
+                                <th><center>Solicita</center></th>
                                 <th><center>Fecha</center></th>
                                 <th><center>Fondo</center></th>
                                 <th><center>Cuenta Bancaria</center></th>
@@ -41,6 +42,7 @@
                                     <td>
                                         {{ optional($v->empleado)->nombre ?? '—' }}
                                     </td>
+                                    <td>{{ $v->quien_solicita ?? '—' }}</td>
                                     <td>{{ \Carbon\Carbon::parse($v->fecha_entrega)->format('d/m/Y') }}</td>
                                     <td>{{ $v->fondo->clave ?? '—' }}</td>
                                     <td>{{ $v->cuentaBancaria->numero ?? '—' }}</td>
@@ -67,19 +69,19 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="{{ route('viaticos.show', $v->id) }}" class="btn btn-info btn-sm">
-                                            <i class="fa-regular fa-eye"></i> Ver
+                                            <i class="fa-regular fa-eye"></i>
                                         </a>
                                         <a href="{{ route('viaticos.edit', $v->id) }}" class="btn btn-success btn-sm">
-                                            <i class="fa-solid fa-pencil"></i> Editar
+                                            <i class="fa-solid fa-pencil"></i>
                                         </a>
                                         <a href="{{ route('comprobaciones.index', $v->id) }}" class="btn btn-warning btn-sm">
-                                            <i class="fa-solid fa-file-invoice-dollar"></i> Comprobaciones
+                                            <i class="fa-solid fa-file-invoice-dollar"></i>
                                         </a>
                                         <form action="{{ route('viaticos.destroy', $v->id) }}" method="POST" style="display: inline-block;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm delete-btn">
-                                                <i class="fa-regular fa-trash-can"></i> Eliminar
+                                                <i class="fa-regular fa-trash-can"></i>
                                             </button>
                                         </form>
                                     </td>

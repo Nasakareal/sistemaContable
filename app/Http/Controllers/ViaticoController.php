@@ -31,6 +31,7 @@ class ViaticoController extends Controller
     {
         $request->validate([
             'empleado_id'         => 'required|integer',
+            'quien_solicita'      => 'required|in:UR RECTORIA,UR DELEGACION ADMINISTRATIVA,UR DIRECCION ACADEMICA PA\'S',
             'fondo_id'            => 'required|exists:fondos,id',
             'cuenta_bancaria_id'  => 'required|exists:cuenta_bancarias,id',
             'fecha_entrega'       => 'required|date',
@@ -73,6 +74,7 @@ class ViaticoController extends Controller
     {
         $request->validate([
             'empleado_id'         => 'required|integer',
+            'quien_solicita'      => 'required|in:UR RECTORIA,UR DELEGACION ADMINISTRATIVA,UR DIRECCION ACADEMICA PA\'S',
             'fondo_id'            => 'required|exists:fondos,id',
             'cuenta_bancaria_id'  => 'required|exists:cuenta_bancarias,id',
             'fecha_entrega'       => 'required|date',

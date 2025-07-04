@@ -231,6 +231,29 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Quien solicita el viatico -->
+                        <div class="row">
+                            <!-- Quién Solicita -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="quien_solicita">Unidad Responsable que Solicita</label>
+                                    <select name="quien_solicita" id="quien_solicita"
+                                            class="form-control @error('quien_solicita') is-invalid @enderror" required>
+                                        <option value="">-- Seleccione --</option>
+                                        <option value="UR RECTORIA" {{ old('quien_solicita') == 'UR RECTORIA' ? 'selected' : '' }}>UR RECTORIA</option>
+                                        <option value="UR DELEGACION ADMINISTRATIVA" {{ old('quien_solicita') == 'UR DELEGACION ADMINISTRATIVA' ? 'selected' : '' }}>UR DELEGACION ADMINISTRATIVA</option>
+                                        <option value="UR DIRECCION ACADEMICA PA'S" {{ old('quien_solicita') == "UR DIRECCION ACADEMICA PA'S" ? 'selected' : '' }}>UR DIRECCION ACADEMICA PA'S</option>
+                                    </select>
+                                    @error('quien_solicita')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Observaciones -->
                         <div class="row">
                             <div class="col-md-12">

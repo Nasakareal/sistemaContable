@@ -106,6 +106,21 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <!-- Quién Solicita -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="quien_solicita">Unidad Responsable que Solicita</label>
+                                <select name="quien_solicita" class="form-control" required>
+                                    <option value="">-- Seleccione --</option>
+                                    <option value="UR RECTORIA" {{ old('quien_solicita', $viatico->quien_solicita) == 'UR RECTORIA' ? 'selected' : '' }}>UR RECTORIA</option>
+                                    <option value="UR DELEGACION ADMINISTRATIVA" {{ old('quien_solicita', $viatico->quien_solicita) == 'UR DELEGACION ADMINISTRATIVA' ? 'selected' : '' }}>UR DELEGACION ADMINISTRATIVA</option>
+                                    <option value="UR DIRECCION ACADEMICA PA'S" {{ old('quien_solicita', $viatico->quien_solicita) == "UR DIRECCION ACADEMICA PA'S" ? 'selected' : '' }}>UR DIRECCION ACADEMICA PA'S</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="revisado">¿Revisado?</label><br>
                         <div class="form-check">
