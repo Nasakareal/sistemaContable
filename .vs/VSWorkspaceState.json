@@ -3,14 +3,8 @@
     "",
     "\\app",
     "\\app\\Http",
-    "\\app\\Http\\Controllers",
-    "\\database",
-    "\\database\\migrations",
-    "\\resources",
-    "\\resources\\views",
-    "\\resources\\views\\viaticos",
-    "\\routes"
+    "\\app\\Http\\Controllers"
   ],
-  "SelectedNode": "\\resources\\views\\viaticos\\show.blade.php",
+  "SelectedNode": "\\app\\Http\\Controllers\\MovimientoController.php",
   "PreviewInSolutionExplorer": false
 }

@@ -98,16 +98,18 @@ class MovimientoController extends Controller
         }
 
         DB::connection('inventarios')->table('alerts')->insert([
-            'tipo'     => 'Requisición',
-            'mensaje'  => $request->mensaje,
-            'origen'   => 'sistemaContable',
-            'leido'    => 0,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'tipo'           => 'Requisición',
+            'mensaje'        => $request->mensaje,
+            'origen'         => 'sistemaContable',
+            'requisicion_id' => $requisicion->id,
+            'leido'          => 0,
+            'created_at'     => now(),
+            'updated_at'     => now(),
         ]);
 
         return back()->with('success', '¡Alerta enviada correctamente!');
     }
+
 
     public function bloquear($id)
     {
