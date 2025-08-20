@@ -9,6 +9,7 @@ use App\Models\Partida;
 use Illuminate\Http\Request;
 use App\Models\Empleado;
 use App\Models\Capitulo;
+use Illuminate\Validation\Rule;
 
 class ViaticoController extends Controller
 {
@@ -20,25 +21,51 @@ class ViaticoController extends Controller
 
     public function create()
     {
-        $fondos   = Fondo::all();
-        $cuentas  = CuentaBancaria::all();
+        $fondos    = Fondo::all();
+        $cuentas   = CuentaBancaria::all();
         $empleados = Empleado::on('humanos')->get();
 
         return view('viaticos.create', compact('fondos', 'cuentas', 'empleados'));
     }
 
+    private function normalizeQuienSolicita(?string $valor): ?string
+    {
+        if ($valor === null) return null;
+        $v = preg_replace('/\s+/', ' ', trim($valor));
+
+        $map = [
+            "UR DIRECCION ACADEMICA PA'S" => 'UR DIRECCION ACADEMICA PAS',
+            "UR DIRECCION ACADEMICA PA´S" => 'UR DIRECCION ACADEMICA PAS',
+            "UR DIRECCION ACADEMICA PA’S" => 'UR DIRECCION ACADEMICA PAS',
+        ];
+
+        return $map[$v] ?? $v;
+    }
+
     public function store(Request $request)
     {
+        // Normaliza ANTES de validar
+        $request->merge([
+            'quien_solicita' => $this->normalizeQuienSolicita($request->input('quien_solicita')),
+        ]);
+
         $request->validate([
             'empleado_id'         => 'required|integer',
-            'quien_solicita'      => 'required|in:UR RECTORIA,UR DELEGACION ADMINISTRATIVA,UR DIRECCION ACADEMICA PA\'S',
+            // ENUM real en BD: 'UR RECTORIA','UR DELEGACION ADMINISTRATIVA','UR DIRECCION ACADEMICA PAS'
+            'quien_solicita'      => ['required', Rule::in([
+                'UR RECTORIA',
+                'UR DELEGACION ADMINISTRATIVA',
+                'UR DIRECCION ACADEMICA PAS',
+            ])],
             'fondo_id'            => 'required|exists:fondos,id',
             'cuenta_bancaria_id'  => 'required|exists:cuenta_bancarias,id',
             'fecha_entrega'       => 'required|date',
             'importe_total'       => 'required|numeric|min:0',
-            'estatus'             => 'required|in:PENDIENTE,COMPROBADO,PARCIAL,CANCELADO',
+            'estatus'             => ['required', Rule::in(['PENDIENTE','COMPROBADO','PARCIAL','CANCELADO'])],
             'observaciones'       => 'nullable|string',
             'revisado'            => 'nullable|boolean',
+        ], [
+            'quien_solicita.in' => "Valor inválido para 'quien_solicita'. Usa: UR RECTORIA, UR DELEGACION ADMINISTRATIVA, UR DIRECCION ACADEMICA PAS.",
         ]);
 
         $cuenta = CuentaBancaria::findOrFail($request->cuenta_bancaria_id);
@@ -72,16 +99,27 @@ class ViaticoController extends Controller
 
     public function update(Request $request, Viatico $viatico)
     {
+        // Normaliza ANTES de validar
+        $request->merge([
+            'quien_solicita' => $this->normalizeQuienSolicita($request->input('quien_solicita')),
+        ]);
+
         $request->validate([
             'empleado_id'         => 'required|integer',
-            'quien_solicita'      => 'required|in:UR RECTORIA,UR DELEGACION ADMINISTRATIVA,UR DIRECCION ACADEMICA PA\'S',
+            'quien_solicita'      => ['required', Rule::in([
+                'UR RECTORIA',
+                'UR DELEGACION ADMINISTRATIVA',
+                'UR DIRECCION ACADEMICA PAS',
+            ])],
             'fondo_id'            => 'required|exists:fondos,id',
             'cuenta_bancaria_id'  => 'required|exists:cuenta_bancarias,id',
             'fecha_entrega'       => 'required|date',
             'importe_total'       => 'required|numeric|min:0',
-            'estatus'             => 'required|in:PENDIENTE,COMPROBADO,PARCIAL,CANCELADO',
+            'estatus'             => ['required', Rule::in(['PENDIENTE','COMPROBADO','PARCIAL','CANCELADO'])],
             'observaciones'       => 'nullable|string',
             'revisado'            => 'nullable|boolean',
+        ], [
+            'quien_solicita.in' => "Valor inválido para 'quien_solicita'. Usa: UR RECTORIA, UR DELEGACION ADMINISTRATIVA, UR DIRECCION ACADEMICA PAS.",
         ]);
 
         // Ajustar saldo si cambió cuenta o importe
@@ -116,8 +154,10 @@ class ViaticoController extends Controller
     public function destroy(Viatico $viatico)
     {
         $cuenta = CuentaBancaria::find($viatico->cuenta_bancaria_id);
-        $cuenta->saldo += $viatico->importe_total;
-        $cuenta->save();
+        if ($cuenta) {
+            $cuenta->saldo += $viatico->importe_total;
+            $cuenta->save();
+        }
 
         $viatico->delete();
 
