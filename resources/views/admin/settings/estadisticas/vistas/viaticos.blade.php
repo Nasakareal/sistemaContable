@@ -7,6 +7,32 @@
 @stop
 
 @section('content')
+
+    {{-- Filtro por mes --}}
+    <form method="GET" action="{{ route('estadisticas.ver', 'viaticos') }}" class="mb-3">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label for="mes" class="form-label">Mes</label>
+                <select id="mes" name="mes" class="form-select">
+                    <option value="">-- Todos los meses --</option>
+                    @foreach(range(1,12) as $m)
+                        <option value="{{ $m }}" {{ (string)request('mes') === (string)$m ? 'selected' : '' }}>
+                            {{ ucfirst(\Carbon\Carbon::create()->month($m)->locale('es')->monthName) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fa-solid fa-filter"></i> Filtrar
+                </button>
+                <a href="{{ route('estadisticas.ver', 'viaticos') }}" class="btn btn-secondary">
+                    Quitar filtro
+                </a>
+            </div>
+        </div>
+    </form>
+
     <table class="table table-bordered table-hover table-striped">
         <thead class="thead-dark">
             <tr>

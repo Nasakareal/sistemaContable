@@ -157,16 +157,20 @@ class EstadisticaController extends Controller
             case 'viaticos':
                 $titulo = 'Listado General de Viáticos';
 
+                $filtroMes = request('mes');
+
                 $viaticos = \App\Models\ViaticoReal::with([
-                    'empleado',
-                    'fondo',
-                    'cuentaBancaria',
-                    'comprobaciones' // ahora sí incluye las fechas
-                ])
-                ->orderByDesc('fecha_entrega')
-                ->get();
+                        'empleado',
+                        'fondo',
+                        'cuentaBancaria',
+                        'comprobaciones'
+                    ])
+                    ->when($filtroMes, fn($q) => $q->whereMonth('fecha_entrega', $filtroMes))
+                    ->orderByDesc('fecha_entrega')
+                    ->get();
 
                 return view('admin.settings.estadisticas.vistas.viaticos', compact('titulo', 'viaticos'));
+
 
             default:
                 abort(404, 'Vista de estadística no disponible');
